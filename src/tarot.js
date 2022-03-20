@@ -1,15 +1,13 @@
 const fs = require('fs');
-function createPlayer(playerName){
-    return {
-        name: playerName,
-        deck: null
-    }
+
+const EntityList = [];
+
+function createEntity(id) {
+    EntityList.append(id);
 }
 
-function loadDeck(deckString){
-    return JSON.parse(fs.readFileSync(deckString, 'utf8'));
-}
-loadDeck('./deck1.json');
 module.exports = {
-    createPlayer
+    createEntity,
+    destroyEntity,
+    initialize,    
 };
