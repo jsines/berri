@@ -1,0 +1,2 @@
+(def testVariable 13)
+(print testVariable)
