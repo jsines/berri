@@ -1,8 +1,18 @@
-const { ERROR } = require("./logger");
+import { ERROR } from "./logger.js";
+import { Token } from "./tokenizer.js";
 
+export interface ASTNode {
+    type: string,
+    params: (ASTNode|ASTLeaf)[]
+}
+export interface ASTLeaf {
+    type: string,
+    value: string
+}
+type ParserResult = [consumed: number, element: ASTNode | ASTLeaf];
 
-const parseToken = (tokens, p) => {
-    let token = tokens[p];
+function parseToken (tokens: Token[], p: number): ParserResult  {
+    let token: Token = tokens[p];
     if (token.type == 'parenOpen') {
         return parseStatement(tokens, p);
     } else if (token.type == 'number') {
@@ -12,12 +22,13 @@ const parseToken = (tokens, p) => {
     } else if (token.type == 'identifier') {
         return [1, {type: 'identifier', value: token.value}];
     }
-    ERROR('unexpected token', token);
+    ERROR(`unexpected token: ${token}`);
+    return [0, {type: 'error', value: 'Something broke!'}];
 }
-const parseStatement = (tokens, p) => {
+function parseStatement (tokens: Token[], p: number): ParserResult {
     let tokensConsumed = 1;
-    let params = [];
-    while (p+tokensConsumed<tokens.length && tokens[p + tokensConsumed].type != 'parenClose') {
+    let params: (ASTNode|ASTLeaf)[] = [];
+    while (p + tokensConsumed < tokens.length && tokens[p + tokensConsumed].type != 'parenClose') {
         let [consumed, token] = parseToken(tokens, p + tokensConsumed);
         tokensConsumed += consumed;
         if (token) {
@@ -27,22 +38,18 @@ const parseStatement = (tokens, p) => {
     return [p + tokensConsumed + 1, { type: 'statement', params }];
 }
 
-const parse = (tokens) => {
+export function parse (tokens: Token[]): ASTNode {
     let p = 0;
-    let ast = {
+    const ast: ASTNode = {
         type: 'statements',
-        params: [],
+        params: []
     };
     while (p < tokens.length) {
-        let token = null;
+        let token: ASTNode | ASTLeaf;
         [p, token] = parseToken(tokens, p);
         if (token) {
             ast.params.push(token);
         }
     }
     return ast;
-}
-
-module.exports = {
-    parse,
 }

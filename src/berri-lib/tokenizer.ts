@@ -1,9 +1,16 @@
-const { LOG } = require("./logger");
+import { LOG } from './logger.js'
 
-const tokenizeCharacter = (type, value, input, current) => {
+export interface Token {
+    type: string,
+    value: string
+}
+type TokenizerResult = [consumed: number, token: Token | null];
+type Tokenizer = (input: string, current: number) => TokenizerResult;
+
+function tokenizeCharacter (type: string, value: string, input:string, current:number): TokenizerResult {
     return (value == input[current]) ? [1, {type, value}] : [0, null];
 }
-const charTokenizers = [
+const charTokenizers: Tokenizer[] = [
     {type: "parenOpen", value: "("},
     {type: "parenClose", value: ")"},
     {type: "equal", value: "="},
@@ -17,10 +24,10 @@ const charTokenizers = [
     {type: "comma", value: ","},
     {type: "dot", value: "."},
 ].map(token => 
-    (input, current) => tokenizeCharacter(token.type, token.value, input, current)
+    ((input: string, current: number) => tokenizeCharacter(token.type, token.value, input, current))
 );
-const tokenizePattern = (type, pattern, input, current) => {
-    let char = input[current];
+function tokenizePattern (type: string, pattern: RegExp, input: string, current: number): TokenizerResult {
+    let char: string = input[current];
     let consumed = 0;
     if (pattern.test(char)) {
         let value = '';
@@ -33,14 +40,14 @@ const tokenizePattern = (type, pattern, input, current) => {
     }
     return [0, null];
 }
-const patternTokenizers = [
+const patternTokenizers : Tokenizer[] = [
     {type: "identifier", pattern: /[a-zA-Z_][a-zA-Z0-9_]*/},
     {type: "number", pattern: /[0-9]+/},
 ].map(token =>
-    (input, current) => tokenizePattern(token.type, token.pattern, input, current)
+    (input: string, current: number) => tokenizePattern(token.type, token.pattern, input, current)
 );
 
-const tokenizeString = (input, current) => {
+const tokenizeString = (input: string, current: number): TokenizerResult => {
     if (input[current] == '"') {
         let value = '';
         let consumed = 1;
@@ -54,18 +61,18 @@ const tokenizeString = (input, current) => {
     }
     return [0, null];
 }
-const skipWhiteSpace = (input, current) => (/\s/.test(input[current])) ? [1, null] : [0, null]
+const skipWhiteSpace: Tokenizer = (input: string, current: number): TokenizerResult => (/\s/.test(input[current])) ? [1, null] : [0, null]
 
-const tokenizers = [
+const tokenizers: Tokenizer[] = [
     ...charTokenizers,
     ...patternTokenizers,
     skipWhiteSpace,
     tokenizeString,
 ]
 
-const tokenize = (code) => { 
+export function tokenize (code: string): Token[] { 
     let p = 0;
-    let tokens = [];
+    let tokens: Token[] = [];
     while (p < code.length) {
         let tokenized = false;
         tokenizers.forEach(tokenizer => {
@@ -84,8 +91,4 @@ const tokenize = (code) => {
         }
     }
     return tokens;
-}
-
-module.exports  = {
-    tokenize,
 }

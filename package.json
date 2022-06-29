@@ -1,17 +1,23 @@
 {
   "name": "berri",
   "version": "1.0.0",
-  "main": "index.js",
+  "exports": "./index.js",
   "author": "Jessica Sines @jsines",
   "license": "MIT",
+  "type": "module",
   "devDependencies": {
-    "jest": "^27.5.1"
+    "jest": "^27.5.1",
+    "typescript": "^4.7.4"
   },
   "scripts": {
-    "start": "node ./berri-cli/berri.js",
+    "start": "node ./bin/berri-cli/berri.js",
     "test": "jest"
   },
   "dependencies": {
+    "chalk": "^5.0.1",
     "yargs": "^17.5.1"
+  },
+  "engines": {
+    "node": ">=14.16"
   }
 }
