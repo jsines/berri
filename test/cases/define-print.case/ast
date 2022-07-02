@@ -1,0 +1,35 @@
+{
+  "type": "statements",
+  "params": [
+    {
+      "type": "statement",
+      "params": [
+        {
+          "type": "identifier",
+          "value": "def"
+        },
+        {
+          "type": "identifier",
+          "value": "testVar"
+        },
+        {
+          "type": "number",
+          "value": "13"
+        }
+      ]
+    },
+    {
+      "type": "statement",
+      "params": [
+        {
+          "type": "identifier",
+          "value": "print"
+        },
+        {
+          "type": "identifier",
+          "value": "testVar"
+        }
+      ]
+    }
+  ]
+}

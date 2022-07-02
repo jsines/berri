@@ -1,4 +1,5 @@
-import { ERROR } from "./logger.js";
+import { LOG } from "./logger.js";
+import { ERROR, PP } from "./logger.js";
 import { Token } from "./tokenizer.js";
 
 export interface ASTNode {
@@ -21,10 +22,13 @@ function parseToken (tokens: Token[], p: number): ParserResult  {
         return [1, {type: 'string', value: token.value}];
     } else if (token.type == 'identifier') {
         return [1, {type: 'identifier', value: token.value}];
+    } else if (token.type == 'math') {
+        return [1, {type: 'math', value: token.value}]
     }
-    ERROR(`unexpected token: ${token}`);
+    ERROR(`unexpected token: ${PP(token)}`);
     return [0, {type: 'error', value: 'Something broke!'}];
 }
+
 function parseStatement (tokens: Token[], p: number): ParserResult {
     let tokensConsumed = 1;
     let params: (ASTNode|ASTLeaf)[] = [];
@@ -38,7 +42,7 @@ function parseStatement (tokens: Token[], p: number): ParserResult {
     return [p + tokensConsumed + 1, { type: 'statement', params }];
 }
 
-export function parse (tokens: Token[]): ASTNode {
+export default function parse (tokens: Token[]): ASTNode {
     let p = 0;
     const ast: ASTNode = {
         type: 'statements',

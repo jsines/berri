@@ -1,42 +1,75 @@
-import { ERROR } from "./logger.js";
-export var emptyContext = {
-    result: 0,
-    reserved: {},
-    memory: {}
-};
-export function addReserved(context, identifier, value) {
-    var newContext = Object.assign({}, context);
-    newContext.reserved[identifier] = value;
-    return newContext;
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.addDefinition = addDefinition;
+exports.addReserved = addReserved;
+exports.emptyContext = void 0;
+exports.getDefinition = getDefinition;
+exports.getReserved = getReserved;
+exports.getResult = getResult;
+exports.isDefined = isDefined;
+exports.isReserved = isReserved;
+exports.setResult = setResult;
+
+var _logger = require("./logger.js");
+
+var _lodash = _interopRequireDefault(require("lodash"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+const emptyContext = Object.freeze({
+  result: 0,
+  reserved: {},
+  memory: {}
+});
+exports.emptyContext = emptyContext;
+
+function addReserved(context, identifier, value) {
+  const newContext = _lodash.default.cloneDeep(context);
+
+  newContext.reserved[identifier] = value;
+  return newContext;
 }
-export function isReserved(context, identifier) {
-    return context.reserved.hasOwnProperty(identifier);
+
+function isReserved(context, identifier) {
+  return context.reserved.hasOwnProperty(identifier);
 }
-export function getReserved(context, identifier) {
-    if (!isReserved(context, identifier)) {
-        ERROR("Failed to get definition of '".concat(identifier, "' in given context: ").concat(context));
-    }
-    return context.reserved[identifier];
+
+function getReserved(context, identifier) {
+  if (!isReserved(context, identifier)) {
+    (0, _logger.ERROR)(`Failed to get definition of '${identifier}' in given context: ${context}`);
+  }
+
+  return context.reserved[identifier];
 }
-export function addDefinition(context, identifier, value) {
-    var newContext = Object.assign({}, context);
-    newContext.memory[identifier] = value;
-    return newContext;
+
+function addDefinition(context, identifier, value) {
+  if (isReserved(context, identifier)) {
+    (0, _logger.ERROR)(`Tried to overwrite reserved identifier ${identifier}`);
+  }
+
+  const newContext = _lodash.default.cloneDeep(context);
+
+  newContext.memory[identifier] = value;
+  return newContext;
 }
-export function isDefined(context, identifier) {
-    return context.memory.hasOwnProperty(identifier);
+
+function isDefined(context, identifier) {
+  return context.memory.hasOwnProperty(identifier);
 }
-export function getDefinition(context, identifier) {
-    if (!isDefined(context, identifier)) {
-        ERROR("Failed to get definition of '".concat(identifier, "' in given context: ").concat(context));
-    }
-    return context.memory[identifier];
+
+function getDefinition(context, identifier) {
+  return context.memory[identifier];
 }
-export function setResult(context, value) {
-    var newContext = Object.assign({}, context);
-    newContext.result = value;
-    return newContext;
+
+function setResult(context, value) {
+  const newContext = Object.assign({}, context);
+  newContext.result = value;
+  return newContext;
 }
-export function getResult(context) {
-    return context.result;
+
+function getResult(context) {
+  return context.result;
 }

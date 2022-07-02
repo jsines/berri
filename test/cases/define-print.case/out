@@ -1,0 +1,10 @@
+{
+  "result": 0,
+  "reserved": {
+    "def": "[Function interpretDefinition]",
+    "print": "[Function interpretPrint]"
+  },
+  "memory": {
+    "testVar": "13"
+  }
+}

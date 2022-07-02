@@ -1,4 +1,4 @@
-import { LOG } from './logger.js'
+import { ERROR } from './logger.js'
 
 export interface Token {
     type: string,
@@ -15,14 +15,18 @@ const charTokenizers: Tokenizer[] = [
     {type: "parenClose", value: ")"},
     {type: "equal", value: "="},
     {type: "semi", value: ";"},
-    {type: "gt", value: ">"},
-    {type: "lt", value: "<"},
     {type: "braketOpen", value: "["},
     {type: "braketClose", value: "]"},
     {type: "braceOpen", value: "{"},
     {type: "braceClose", value: "}"},
     {type: "comma", value: ","},
     {type: "dot", value: "."},
+    {type: "math", value: "+"},
+    {type: "math", value: "-"},
+    {type: "math", value: "-"},
+    {type: "math", value: "/"},
+    {type: "math", value: ">"},
+    {type: "math", value: "<"}
 ].map(token => 
     ((input: string, current: number) => tokenizeCharacter(token.type, token.value, input, current))
 );
@@ -70,7 +74,7 @@ const tokenizers: Tokenizer[] = [
     tokenizeString,
 ]
 
-export function tokenize (code: string): Token[] { 
+export default function tokenize (code: string): Token[] { 
     let p = 0;
     let tokens: Token[] = [];
     while (p < code.length) {
@@ -87,7 +91,7 @@ export function tokenize (code: string): Token[] {
             }
         });
         if (!tokenized) {
-            console.log("[ERROR]", `Unexpected character: ${code[p]}`);
+            ERROR(`Unexpected character: ${code[p]}`);
         }
     }
     return tokens;

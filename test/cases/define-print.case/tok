@@ -1,0 +1,38 @@
+[
+  {
+    "type": "parenOpen",
+    "value": "("
+  },
+  {
+    "type": "identifier",
+    "value": "def"
+  },
+  {
+    "type": "identifier",
+    "value": "testVar"
+  },
+  {
+    "type": "number",
+    "value": "13"
+  },
+  {
+    "type": "parenClose",
+    "value": ")"
+  },
+  {
+    "type": "parenOpen",
+    "value": "("
+  },
+  {
+    "type": "identifier",
+    "value": "print"
+  },
+  {
+    "type": "identifier",
+    "value": "testVar"
+  },
+  {
+    "type": "parenClose",
+    "value": ")"
+  }
+]

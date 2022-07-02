@@ -1,20 +1,34 @@
 {
   "name": "berri",
   "version": "1.0.0",
-  "exports": "./index.js",
   "author": "Jessica Sines @jsines",
   "license": "MIT",
-  "type": "module",
   "devDependencies": {
-    "jest": "^27.5.1",
-    "typescript": "^4.7.4"
+    "@babel/cli": "^7.18.6",
+    "@babel/core": "^7.18.6",
+    "@babel/preset-env": "^7.18.6",
+    "@babel/preset-typescript": "^7.18.6",
+    "babel-jest": "^28.1.2",
+    "nodemon": "^2.0.18"
   },
   "scripts": {
-    "start": "node ./bin/berri-cli/berri.js",
-    "test": "jest"
+    "watch": "yarn tsc -watch",
+    "build": "yarn babel --extensions .ts ./src --out-dir bin",
+    "test": "jest --silent=false",
+    "berri": "ts-node ./bin/berri-cli/berri.js",
+    "berri-c": "yarn build && yarn berri"
   },
   "dependencies": {
-    "chalk": "^5.0.1",
+    "@types/filesystem": "^0.0.32",
+    "@types/jest": "^28.1.4",
+    "@types/lodash": "^4.14.182",
+    "@types/node": "^18.0.0",
+    "@types/yargs": "^17.0.10",
+    "chalk": "4.1.2",
+    "jest": "^28.1.2",
+    "lodash": "^4.17.21",
+    "ts-node": "^10.8.1",
+    "typescript": "^4.7.4",
     "yargs": "^17.5.1"
   },
   "engines": {

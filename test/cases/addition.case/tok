@@ -1,0 +1,22 @@
+[
+  {
+    "type": "parenOpen",
+    "value": "("
+  },
+  {
+    "type": "math",
+    "value": "+"
+  },
+  {
+    "type": "number",
+    "value": "14"
+  },
+  {
+    "type": "number",
+    "value": "13"
+  },
+  {
+    "type": "parenClose",
+    "value": ")"
+  }
+]

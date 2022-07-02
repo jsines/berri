@@ -1,0 +1,31 @@
+{
+  "type": "statements",
+  "params": [
+    {
+      "type": "statement",
+      "params": [
+        {
+          "type": "identifier",
+          "value": "print"
+        },
+        {
+          "type": "statement",
+          "params": [
+            {
+              "type": "math",
+              "value": "+"
+            },
+            {
+              "type": "number",
+              "value": "14"
+            },
+            {
+              "type": "number",
+              "value": "13"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

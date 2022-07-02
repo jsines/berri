@@ -3,7 +3,8 @@ import {
     WARN,
     SUCCESS,
     PP,
-    PRINT
+    PRINT,
+    LOG
 } from './logger.js';
 import {
     Context,
@@ -20,8 +21,6 @@ import {
 import {
     ASTNode, ASTLeaf
 } from './parser.js';
-
-type ReservedInterpreter = (params: any, context: Context) => Context;
 
 function interpretDefinition(params: (ASTNode|ASTLeaf)[], context: Context): Context {
     if (params.length != 2) {
@@ -56,18 +55,48 @@ function interpretStatements(node: ASTNode, context: Context): Context {
     );
 }
 
-function interpretStatement(statement: ASTNode, context: Context): Context {
+function interpretStatement(statement: ASTNode, context: Context): any {
     const operand: ASTNode | ASTLeaf = statement.params[0];
-    const params: (ASTNode | ASTLeaf)[] = statement.params.splice(1);
+    const params: (ASTNode | ASTLeaf)[] = statement.params.slice(1);
     if (isLeaf(operand) && operand.type === 'identifier') {
         const op: string = operand.value;
         if (isReserved(context, op)) {
-            const opFunction: ReservedInterpreter = getReserved(context, op);
+            const opFunction = getReserved(context, op);
             const newContext: Context = opFunction(params, context);
             return setResult(newContext, getResult(context));
         } else if (isDefined(context, op)) {
             return setResult(context, getDefinition(context, op));
         }
+    } else if (isLeaf(operand) && operand.type === 'math') {
+        const rest = params.slice(1);
+        let res; 
+        switch (operand.value) {
+            case "+":
+                res = params.reduce(
+                    (prev, cur) => prev + getResult(interpret(cur, context)),
+                    0
+                )
+                break;
+            case "-":
+                res = rest.reduce(
+                    (prev, cur) => prev - getResult(interpret(cur, context)),
+                    getResult(interpret(params[0], context))
+                )
+                break;
+            case "*":
+                res = params.reduce(
+                    (prev, cur) => prev * getResult(interpret(cur, context)),
+                    1
+                )
+                break;
+            case "/":
+                res = rest.reduce(
+                    (prev, cur) => prev / getResult(interpret(cur, context)),
+                    getResult(interpret(params[0], context))
+                )
+                break;
+        }
+        return setResult(context, res);
     }
     ERROR(`Failed to interpret statement ${PP(statement)} in context ${PP(context)}`);
     return emptyContext;
@@ -83,7 +112,7 @@ function isNode(x: ASTNode | ASTLeaf): x is ASTNode {
 function isLeaf(x: ASTNode | ASTLeaf): x is ASTLeaf {
     return (x as ASTLeaf).value !== undefined;
 }
-export function interpret(arg: (ASTNode | ASTLeaf), context: Context = setReserved(emptyContext)): any {
+export default function interpret(arg: (ASTNode | ASTLeaf), context: Context = setReserved(emptyContext)): any {
     if (isNode(arg)){
         switch(arg.type) {
             case 'statements':
@@ -101,10 +130,10 @@ export function interpret(arg: (ASTNode | ASTLeaf), context: Context = setReserv
                 return interpretIdentifier(arg, context);
                 break;
             case 'number':
-                return arg.value;
+                return setResult(context, Number(arg.value));
                 break;
             case 'string':
-                return arg.value;
+                return setResult(context, arg.value);
                 break;
             default:
                 break;
