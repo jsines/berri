@@ -14,6 +14,7 @@ function tokenizeCharacter(type, value, input, current) {
   }] : [0, null];
 }
 
+const reservedKeywords = ['def', 'print'];
 const charTokenizers = [{
   type: "parenOpen",
   value: "("
@@ -75,6 +76,13 @@ function tokenizePattern(type, pattern, input, current) {
       value += char;
       consumed++;
       char = input[current + consumed];
+    }
+
+    if (reservedKeywords.includes(value)) {
+      return [consumed, {
+        type: 'reserved',
+        value
+      }];
     }
 
     return [consumed, {
@@ -143,7 +151,7 @@ function tokenize(code) {
     });
 
     if (!tokenized) {
-      (0, _logger.ERROR)(`Unexpected character: ${code[p]}`);
+      (0, _logger.ERROR)(`Tokenizer: Unexpected character: ${code[p]}`);
     }
   }
 

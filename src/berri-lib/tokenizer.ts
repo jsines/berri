@@ -1,3 +1,4 @@
+import { isReserved } from './context.js';
 import { ERROR } from './logger.js'
 
 export interface Token {
@@ -10,6 +11,10 @@ type Tokenizer = (input: string, current: number) => TokenizerResult;
 function tokenizeCharacter (type: string, value: string, input:string, current:number): TokenizerResult {
     return (value == input[current]) ? [1, {type, value}] : [0, null];
 }
+const reservedKeywords = [
+    'def',
+    'print'
+]
 const charTokenizers: Tokenizer[] = [
     {type: "parenOpen", value: "("},
     {type: "parenClose", value: ")"},
@@ -39,6 +44,9 @@ function tokenizePattern (type: string, pattern: RegExp, input: string, current:
             value += char;
             consumed++;
             char = input[current + consumed];
+        }
+        if (reservedKeywords.includes(value)) {
+            return [consumed, {type: 'reserved', value}]
         }
         return [consumed, {type, value}];
     }
@@ -91,7 +99,7 @@ export default function tokenize (code: string): Token[] {
             }
         });
         if (!tokenized) {
-            ERROR(`Unexpected character: ${code[p]}`);
+            ERROR(`Tokenizer: Unexpected character: ${code[p]}`);
         }
     }
     return tokens;

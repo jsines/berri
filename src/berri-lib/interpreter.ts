@@ -18,28 +18,24 @@ import {
     setResult,
     getResult
 } from './context.js';
-import {
-    ASTNode, ASTLeaf
-} from './parser.js';
+import { ASTNode } from './parser.js';
 
-function interpretDefinition(params: (ASTNode|ASTLeaf)[], context: Context): Context {
+function interpretDefinition(params: ASTNode[], context: Context): Context {
     if (params.length != 2) {
-        ERROR(`Incorrect number of arguments for definition. Expected: 2, Received: ${params.length}`);
+        ERROR(`Interpreter: Incorrect number of arguments for definition. Expected: 2, Received: ${params.length}`);
     } else if (params[0].type != 'identifier') {
-        ERROR(`Tried to write a definition to a non-identifier ${params[0]}!`);
-    } else if (isLeaf(params[0])){
-        if (isReserved(context, params[0].value)) {
-            ERROR(`Tried to overwrite a reserved identifier ${params[0]}`);
-        }
-        return addDefinition(context, params[0].value, interpret(params[1]));
+        ERROR(`Interpreter: Tried to write a definition to a non-identifier ${params[0]}!`);
+    } else if (typeof(params[0].value) === 'string'){
+        const newContext = interpret(params[1], context);
+        return addDefinition(newContext, params[0].value, getResult(newContext));
     }
-    ERROR(`Tried to define to an ASTNode: ${params[0]}`);
+    ERROR(`Interpreter: Tried to define to an array of nodes: ${params[0]}`);
     return emptyContext;
 }
 
-function interpretPrint(params: (ASTNode|ASTLeaf)[], context: Context): Context {
+function interpretPrint(params: ASTNode[], context: Context): Context {
     if (params.length > 1) {
-        ERROR(`Tried to print too many params! Expected: 1, Received: ${params.length}`);
+        ERROR(`Interpreter: Tried to print too many params! Expected: 1, Received: ${params.length}`);
     }
     const newContext: Context = interpret(params[0], context);
     PRINT(getResult(newContext));
@@ -47,7 +43,7 @@ function interpretPrint(params: (ASTNode|ASTLeaf)[], context: Context): Context 
 }
 
 function interpretStatements(node: ASTNode, context: Context): Context {
-    return node.params.reduce(
+    return node.value.reduce(
         (previousContext, currentStatement) => {
             return interpret(currentStatement, previousContext);
         },
@@ -55,91 +51,76 @@ function interpretStatements(node: ASTNode, context: Context): Context {
     );
 }
 
-function interpretStatement(statement: ASTNode, context: Context): any {
-    const operand: ASTNode | ASTLeaf = statement.params[0];
-    const params: (ASTNode | ASTLeaf)[] = statement.params.slice(1);
-    if (isLeaf(operand) && operand.type === 'identifier') {
-        const op: string = operand.value;
-        if (isReserved(context, op)) {
-            const opFunction = getReserved(context, op);
-            const newContext: Context = opFunction(params, context);
-            return setResult(newContext, getResult(context));
-        } else if (isDefined(context, op)) {
-            return setResult(context, getDefinition(context, op));
-        }
-    } else if (isLeaf(operand) && operand.type === 'math') {
-        const rest = params.slice(1);
-        let res; 
-        switch (operand.value) {
-            case "+":
-                res = params.reduce(
-                    (prev, cur) => prev + getResult(interpret(cur, context)),
-                    0
-                )
-                break;
-            case "-":
-                res = rest.reduce(
-                    (prev, cur) => prev - getResult(interpret(cur, context)),
-                    getResult(interpret(params[0], context))
-                )
-                break;
-            case "*":
-                res = params.reduce(
-                    (prev, cur) => prev * getResult(interpret(cur, context)),
-                    1
-                )
-                break;
-            case "/":
-                res = rest.reduce(
-                    (prev, cur) => prev / getResult(interpret(cur, context)),
-                    getResult(interpret(params[0], context))
-                )
-                break;
-        }
-        return setResult(context, res);
+function interpretStatement(statement: ASTNode, context: Context): Context {
+    const operand: ASTNode = statement.value[0];
+    const params: ASTNode[] = statement.value.slice(1);
+    let newContext;
+    switch(operand.type) {
+        case 'reserved':
+            newContext = interpretReserved(operand, context);
+            return getResult(newContext)(params, newContext);
+            break;
+        case 'identifier':
+            newContext = interpretIdentifier(operand, context)
+            return getResult(newContext)(params, newContext);
+            break;
+        case 'math':
+            const first = interpret(params[0], context);
+            const rest = params.slice(1);
+            
+            const operations = {
+                "+": (a,b) => {return a+b},
+                "-": (a,b) => {return a-b},
+                "*": (a,b) => {return a*b},
+                "/": (a,b) => {return a/b}
+            };
+            newContext = rest.reduce(
+                (prevContext, currentNode) => {
+                    const innerContext = interpret(currentNode, prevContext);
+                    const newResult = operations[operand.value](getResult(prevContext), getResult(innerContext));
+                    return setResult(innerContext, newResult);
+                },
+                first
+            )
+            return newContext;
+            break;
     }
-    ERROR(`Failed to interpret statement ${PP(statement)} in context ${PP(context)}`);
+    ERROR(`Interpreter: Failed to interpret statement ${PP(statement)} in context ${PP(context)}`);
     return emptyContext;
 }
-
-function interpretIdentifier(leaf: ASTLeaf, context: Context): Context {
-    return setResult(context, getDefinition(context, leaf.value))
+function interpretReserved(node: ASTNode, context: Context): Context {
+    return setResult(context, getReserved(context, node.value));
+}
+function interpretIdentifier(node: ASTNode, context: Context): Context {
+    if (!isDefined(context, node.value))
+        ERROR(`Interpreter: Failed to get interpret identifier ${node.value}`)
+    return setResult(context, getDefinition(context, node.value))
 }
 
-function isNode(x: ASTNode | ASTLeaf): x is ASTNode {
-    return (x as ASTNode).params !== undefined;
-}
-function isLeaf(x: ASTNode | ASTLeaf): x is ASTLeaf {
-    return (x as ASTLeaf).value !== undefined;
-}
-export default function interpret(arg: (ASTNode | ASTLeaf), context: Context = setReserved(emptyContext)): any {
-    if (isNode(arg)){
-        switch(arg.type) {
-            case 'statements':
-                return interpretStatements(arg, context);
-                break;
-            case 'statement':
-                return interpretStatement(arg, context);
-                break;
-            default:
-                break;
-        }
-    } else {
-        switch(arg.type) {
-            case 'identifier':
-                return interpretIdentifier(arg, context);
-                break;
-            case 'number':
-                return setResult(context, Number(arg.value));
-                break;
-            case 'string':
-                return setResult(context, arg.value);
-                break;
-            default:
-                break;
-        }
+export default function interpret(arg: ASTNode, context: Context = setReserved(emptyContext)): any {
+    switch(arg.type) {
+        case 'statements':
+            return interpretStatements(arg, context);
+            break;
+        case 'statement':
+            return interpretStatement(arg, context);
+            break;
+        case 'reserved':
+            return interpretReserved(arg, context);
+            break;
+        case 'identifier':
+            return interpretIdentifier(arg, context);
+            break;
+        case 'number':
+            return setResult(context, Number(arg.value));
+            break;
+        case 'string':
+            return setResult(context, arg.value);
+            break;
+        default:
+            break;
     }
-    ERROR(`Failed to interpret ${arg}`);
+    ERROR(`Interpreter: Failed to interpret ${PP(arg)}`);
     return emptyContext;
 }
 

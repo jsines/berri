@@ -23,6 +23,7 @@ describe('integration', () => {
     it(name, () => {
       expect(tokenize(raw)).toStrictEqual(tok);
       expect(parse(tok)).toStrictEqual(ast);
+//      expect(interpret(ast)).toBe(out)
       expect(contextEquals(interpret(ast), out)).toBe(true);
     })
   });

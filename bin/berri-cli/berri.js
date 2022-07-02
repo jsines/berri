@@ -21,6 +21,7 @@ var _logger = require("../berri-lib/logger.js");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 const testCaseDir = './test/cases';
+const readDir = 'examples';
 
 function saveTestCase(fileName, code, tokens, ast, result) {
   if (!_fs.default.existsSync(testCaseDir)) {
@@ -40,7 +41,7 @@ function saveTestCase(fileName, code, tokens, ast, result) {
 }
 
 function berri(args) {
-  const fileName = args._[0];
+  const fileName = `${readDir}/${args._[0]}`;
 
   const code = _fs.default.readFileSync(fileName, 'utf8');
 
@@ -50,7 +51,7 @@ function berri(args) {
 
   if (typeof args._['save'] !== undefined) {
     try {
-      saveTestCase(fileName, code, tokens, ast, result);
+      saveTestCase(args._[0], code, tokens, ast, result);
     } catch (e) {
       (0, _logger.ERROR)(e);
     }

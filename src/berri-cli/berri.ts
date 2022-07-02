@@ -13,7 +13,7 @@ import {
 import { Context } from '../berri-lib/context.js'
 
 const testCaseDir = './test/cases';
-
+const readDir = 'examples';
 interface Config {
     genTestCase: boolean,
 }
@@ -30,7 +30,7 @@ export function saveTestCase (fileName, code, tokens, ast, result) {
     fs.writeFileSync(`${caseDir}/out`, PP(result))
 }
 export default function berri (args: any) {
-    const fileName: string = args._[0]
+    const fileName: string = `${readDir}/${args._[0]}`;
     const code: string = fs.readFileSync(fileName, 'utf8');
     const tokens: Token[] = tokenize(code);
     const ast: ASTNode = parse(tokens);
@@ -38,7 +38,7 @@ export default function berri (args: any) {
 
     if (typeof(args._['save']) !== undefined) {
         try {
-            saveTestCase(fileName, code, tokens, ast, result);
+            saveTestCase(args._[0], code, tokens, ast, result);
         } catch (e) {
             ERROR(e);
         }

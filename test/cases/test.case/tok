@@ -4,20 +4,12 @@
     "value": "("
   },
   {
+    "type": "reserved",
+    "value": "def"
+  },
+  {
     "type": "identifier",
-    "value": "print"
-  },
-  {
-    "type": "parenOpen",
-    "value": "("
-  },
-  {
-    "type": "math",
-    "value": "+"
-  },
-  {
-    "type": "number",
-    "value": "14"
+    "value": "testVar"
   },
   {
     "type": "number",
@@ -26,6 +18,18 @@
   {
     "type": "parenClose",
     "value": ")"
+  },
+  {
+    "type": "parenOpen",
+    "value": "("
+  },
+  {
+    "type": "reserved",
+    "value": "print"
+  },
+  {
+    "type": "identifier",
+    "value": "testVar"
   },
   {
     "type": "parenClose",

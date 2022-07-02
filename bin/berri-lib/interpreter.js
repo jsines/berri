@@ -11,24 +11,21 @@ var _context = require("./context.js");
 
 function interpretDefinition(params, context) {
   if (params.length != 2) {
-    (0, _logger.ERROR)(`Incorrect number of arguments for definition. Expected: 2, Received: ${params.length}`);
+    (0, _logger.ERROR)(`Interpreter: Incorrect number of arguments for definition. Expected: 2, Received: ${params.length}`);
   } else if (params[0].type != 'identifier') {
-    (0, _logger.ERROR)(`Tried to write a definition to a non-identifier ${params[0]}!`);
-  } else if (isLeaf(params[0])) {
-    if ((0, _context.isReserved)(context, params[0].value)) {
-      (0, _logger.ERROR)(`Tried to overwrite a reserved identifier ${params[0]}`);
-    }
-
-    return (0, _context.addDefinition)(context, params[0].value, interpret(params[1]));
+    (0, _logger.ERROR)(`Interpreter: Tried to write a definition to a non-identifier ${params[0]}!`);
+  } else if (typeof params[0].value === 'string') {
+    const newContext = interpret(params[1], context);
+    return (0, _context.addDefinition)(newContext, params[0].value, (0, _context.getResult)(newContext));
   }
 
-  (0, _logger.ERROR)(`Tried to define to an ASTNode: ${params[0]}`);
+  (0, _logger.ERROR)(`Interpreter: Tried to define to an array of nodes: ${params[0]}`);
   return _context.emptyContext;
 }
 
 function interpretPrint(params, context) {
   if (params.length > 1) {
-    (0, _logger.ERROR)(`Tried to print too many params! Expected: 1, Received: ${params.length}`);
+    (0, _logger.ERROR)(`Interpreter: Tried to print too many params! Expected: 1, Received: ${params.length}`);
   }
 
   const newContext = interpret(params[0], context);
@@ -37,100 +34,97 @@ function interpretPrint(params, context) {
 }
 
 function interpretStatements(node, context) {
-  return node.params.reduce((previousContext, currentStatement) => {
+  return node.value.reduce((previousContext, currentStatement) => {
     return interpret(currentStatement, previousContext);
   }, context);
 }
 
 function interpretStatement(statement, context) {
-  const operand = statement.params[0];
-  const params = statement.params.slice(1);
+  const operand = statement.value[0];
+  const params = statement.value.slice(1);
+  let newContext;
 
-  if (isLeaf(operand) && operand.type === 'identifier') {
-    const op = operand.value;
+  switch (operand.type) {
+    case 'reserved':
+      newContext = interpretReserved(operand, context);
+      return (0, _context.getResult)(newContext)(params, newContext);
+      break;
 
-    if ((0, _context.isReserved)(context, op)) {
-      const opFunction = (0, _context.getReserved)(context, op);
-      const newContext = opFunction(params, context);
-      return (0, _context.setResult)(newContext, (0, _context.getResult)(context));
-    } else if ((0, _context.isDefined)(context, op)) {
-      return (0, _context.setResult)(context, (0, _context.getDefinition)(context, op));
-    }
-  } else if (isLeaf(operand) && operand.type === 'math') {
-    const rest = params.slice(1);
-    let res;
+    case 'identifier':
+      newContext = interpretIdentifier(operand, context);
+      return (0, _context.getResult)(newContext)(params, newContext);
+      break;
 
-    switch (operand.value) {
-      case "+":
-        res = params.reduce((prev, cur) => prev + (0, _context.getResult)(interpret(cur, context)), 0);
-        break;
-
-      case "-":
-        res = rest.reduce((prev, cur) => prev - (0, _context.getResult)(interpret(cur, context)), (0, _context.getResult)(interpret(params[0], context)));
-        break;
-
-      case "*":
-        res = params.reduce((prev, cur) => prev * (0, _context.getResult)(interpret(cur, context)), 1);
-        break;
-
-      case "/":
-        res = rest.reduce((prev, cur) => prev / (0, _context.getResult)(interpret(cur, context)), (0, _context.getResult)(interpret(params[0], context)));
-        break;
-    }
-
-    return (0, _context.setResult)(context, res);
+    case 'math':
+      const first = interpret(params[0], context);
+      const rest = params.slice(1);
+      const operations = {
+        "+": (a, b) => {
+          return a + b;
+        },
+        "-": (a, b) => {
+          return a - b;
+        },
+        "*": (a, b) => {
+          return a * b;
+        },
+        "/": (a, b) => {
+          return a / b;
+        }
+      };
+      newContext = rest.reduce((prevContext, currentNode) => {
+        const innerContext = interpret(currentNode, prevContext);
+        const newResult = operations[operand.value]((0, _context.getResult)(prevContext), (0, _context.getResult)(innerContext));
+        return (0, _context.setResult)(innerContext, newResult);
+      }, first);
+      return newContext;
+      break;
   }
 
-  (0, _logger.ERROR)(`Failed to interpret statement ${(0, _logger.PP)(statement)} in context ${(0, _logger.PP)(context)}`);
+  (0, _logger.ERROR)(`Interpreter: Failed to interpret statement ${(0, _logger.PP)(statement)} in context ${(0, _logger.PP)(context)}`);
   return _context.emptyContext;
 }
 
-function interpretIdentifier(leaf, context) {
-  return (0, _context.setResult)(context, (0, _context.getDefinition)(context, leaf.value));
+function interpretReserved(node, context) {
+  return (0, _context.setResult)(context, (0, _context.getReserved)(context, node.value));
 }
 
-function isNode(x) {
-  return x.params !== undefined;
-}
-
-function isLeaf(x) {
-  return x.value !== undefined;
+function interpretIdentifier(node, context) {
+  if (!(0, _context.isDefined)(context, node.value)) (0, _logger.ERROR)(`Interpreter: Failed to get interpret identifier ${node.value}`);
+  return (0, _context.setResult)(context, (0, _context.getDefinition)(context, node.value));
 }
 
 function interpret(arg, context = setReserved(_context.emptyContext)) {
-  if (isNode(arg)) {
-    switch (arg.type) {
-      case 'statements':
-        return interpretStatements(arg, context);
-        break;
+  switch (arg.type) {
+    case 'statements':
+      return interpretStatements(arg, context);
+      break;
 
-      case 'statement':
-        return interpretStatement(arg, context);
-        break;
+    case 'statement':
+      return interpretStatement(arg, context);
+      break;
 
-      default:
-        break;
-    }
-  } else {
-    switch (arg.type) {
-      case 'identifier':
-        return interpretIdentifier(arg, context);
-        break;
+    case 'reserved':
+      return interpretReserved(arg, context);
+      break;
 
-      case 'number':
-        return (0, _context.setResult)(context, Number(arg.value));
-        break;
+    case 'identifier':
+      return interpretIdentifier(arg, context);
+      break;
 
-      case 'string':
-        return (0, _context.setResult)(context, arg.value);
-        break;
+    case 'number':
+      return (0, _context.setResult)(context, Number(arg.value));
+      break;
 
-      default:
-        break;
-    }
+    case 'string':
+      return (0, _context.setResult)(context, arg.value);
+      break;
+
+    default:
+      break;
   }
 
-  (0, _logger.ERROR)(`Failed to interpret ${arg}`);
+  (0, _logger.ERROR)(`Interpreter: Failed to interpret ${(0, _logger.PP)(arg)}`);
   return _context.emptyContext;
 }
 

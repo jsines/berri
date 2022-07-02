@@ -1,9 +1,9 @@
 {
   "type": "statements",
-  "params": [
+  "value": [
     {
       "type": "statement",
-      "params": [
+      "value": [
         {
           "type": "math",
           "value": "+"

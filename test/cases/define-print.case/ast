@@ -1,11 +1,11 @@
 {
   "type": "statements",
-  "params": [
+  "value": [
     {
       "type": "statement",
-      "params": [
+      "value": [
         {
-          "type": "identifier",
+          "type": "reserved",
           "value": "def"
         },
         {
@@ -20,9 +20,9 @@
     },
     {
       "type": "statement",
-      "params": [
+      "value": [
         {
-          "type": "identifier",
+          "type": "reserved",
           "value": "print"
         },
         {

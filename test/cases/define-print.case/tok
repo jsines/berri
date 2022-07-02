@@ -4,7 +4,7 @@
     "value": "("
   },
   {
-    "type": "identifier",
+    "type": "reserved",
     "value": "def"
   },
   {
@@ -24,7 +24,7 @@
     "value": "("
   },
   {
-    "type": "identifier",
+    "type": "reserved",
     "value": "print"
   },
   {
