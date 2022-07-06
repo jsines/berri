@@ -1,4 +1,8 @@
-Directory Structure: 
+<div align="center">
+<h1>berri</h1>
+<p>Directory Structure</p>
+<img src="https://img.shields.io/tokei/lines/github/jsines/berri">
+</div>
 
 `bin/`
 
@@ -25,4 +29,3 @@ tokenizer(x.case/raw) === x.case/tok
 parser(x.case/tok) === x.case/ast
 interpreter(x.case/ast) === x.case/out
 ```
-
