@@ -28,7 +28,7 @@ const charTokenizers: Tokenizer[] = [
     {type: "dot", value: "."},
     {type: "math", value: "+"},
     {type: "math", value: "-"},
-    {type: "math", value: "-"},
+    {type: "math", value: "*"},
     {type: "math", value: "/"},
     {type: "math", value: ">"},
     {type: "math", value: "<"}

@@ -34,28 +34,33 @@ function parseToken (tokens: Token[], p: number): ParserResult  {
     return [0, {type: 'error', value: 'Something broke!'}];
 }
 
-function parseStatement (tokens: Token[], p: number): ParserResult {
+export function parseStatement (tokens: Token[], startIndex: number): ParserResult {
     let tokensConsumed = 1;
     let value: ASTNode[] = [];
-    while (p + tokensConsumed < tokens.length && tokens[p + tokensConsumed].type != 'parenClose') {
-        let [consumed, astNode] = parseToken(tokens, p + tokensConsumed);
+    while (startIndex + tokensConsumed < tokens.length && tokens[startIndex + tokensConsumed].type != 'parenClose') {
+        let [consumed, astNode] = parseToken(tokens, startIndex + tokensConsumed);
         tokensConsumed += consumed;
         if (astNode) {
             value.push(astNode);
         }
     }
-    return [p + tokensConsumed + 1, { type: 'statement', value }];
+    if (startIndex+tokensConsumed === tokens.length) {
+        ERROR(`Parser: Expected ')'`);
+    }
+    return [tokensConsumed+1, { type: 'statement', value }];
 }
 
 export default function parse (tokens: Token[]): ASTNode {
     let p = 0;
+    let consumed; 
     const ast: ASTNode = {
         type: 'statements',
         value: []
     };
     while (p < tokens.length) {
         let token: ASTNode;
-        [p, token] = parseToken(tokens, p);
+        [consumed, token] = parseToken(tokens, p);
+        p+=consumed;
         if (token) {
             ast.value.push(token);
         }

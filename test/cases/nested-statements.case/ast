@@ -1,0 +1,48 @@
+{
+  "type": "statements",
+  "value": [
+    {
+      "type": "statement",
+      "value": [
+        {
+          "type": "math",
+          "value": "+"
+        },
+        {
+          "type": "statement",
+          "value": [
+            {
+              "type": "math",
+              "value": "+"
+            },
+            {
+              "type": "number",
+              "value": "1"
+            },
+            {
+              "type": "number",
+              "value": "1"
+            }
+          ]
+        },
+        {
+          "type": "statement",
+          "value": [
+            {
+              "type": "math",
+              "value": "+"
+            },
+            {
+              "type": "number",
+              "value": "1"
+            },
+            {
+              "type": "number",
+              "value": "1"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

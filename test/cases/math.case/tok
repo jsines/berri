@@ -1,0 +1,38 @@
+[
+  {
+    "type": "parenOpen",
+    "value": "("
+  },
+  {
+    "type": "math",
+    "value": "+"
+  },
+  {
+    "type": "parenOpen",
+    "value": "("
+  },
+  {
+    "type": "math",
+    "value": "-"
+  },
+  {
+    "type": "number",
+    "value": "3"
+  },
+  {
+    "type": "number",
+    "value": "4"
+  },
+  {
+    "type": "parenClose",
+    "value": ")"
+  },
+  {
+    "type": "number",
+    "value": "2"
+  },
+  {
+    "type": "parenClose",
+    "value": ")"
+  }
+]

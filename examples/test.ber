@@ -1,2 +1,4 @@
-(def testVar 13)
-(print testVar)
+(fn helloWorld (x y z) (
+  (print (+ x y z))
+))
+(helloWorld 2 3 4)

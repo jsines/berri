@@ -4,6 +4,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = parse;
+exports.parseStatement = parseStatement;
 
 var _logger = require("./logger.js");
 
@@ -57,12 +58,12 @@ function parseToken(tokens, p) {
   }];
 }
 
-function parseStatement(tokens, p) {
+function parseStatement(tokens, startIndex) {
   let tokensConsumed = 1;
   let value = [];
 
-  while (p + tokensConsumed < tokens.length && tokens[p + tokensConsumed].type != 'parenClose') {
-    let [consumed, astNode] = parseToken(tokens, p + tokensConsumed);
+  while (startIndex + tokensConsumed < tokens.length && tokens[startIndex + tokensConsumed].type != 'parenClose') {
+    let [consumed, astNode] = parseToken(tokens, startIndex + tokensConsumed);
     tokensConsumed += consumed;
 
     if (astNode) {
@@ -70,7 +71,11 @@ function parseStatement(tokens, p) {
     }
   }
 
-  return [p + tokensConsumed + 1, {
+  if (startIndex + tokensConsumed === tokens.length) {
+    (0, _logger.ERROR)(`Parser: Expected ')'`);
+  }
+
+  return [tokensConsumed + 1, {
     type: 'statement',
     value
   }];
@@ -78,6 +83,7 @@ function parseStatement(tokens, p) {
 
 function parse(tokens) {
   let p = 0;
+  let consumed;
   const ast = {
     type: 'statements',
     value: []
@@ -85,7 +91,8 @@ function parse(tokens) {
 
   while (p < tokens.length) {
     let token;
-    [p, token] = parseToken(tokens, p);
+    [consumed, token] = parseToken(tokens, p);
+    p += consumed;
 
     if (token) {
       ast.value.push(token);

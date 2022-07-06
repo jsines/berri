@@ -1,2 +1,0 @@
-(def testVar 13)
-(print testVar)

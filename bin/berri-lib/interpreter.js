@@ -9,6 +9,10 @@ var _logger = require("./logger.js");
 
 var _context = require("./context.js");
 
+var _lodash = _interopRequireDefault(require("lodash"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 function interpretDefinition(params, context) {
   if (params.length != 2) {
     (0, _logger.ERROR)(`Interpreter: Incorrect number of arguments for definition. Expected: 2, Received: ${params.length}`);
@@ -94,7 +98,11 @@ function interpretIdentifier(node, context) {
   return (0, _context.setResult)(context, (0, _context.getDefinition)(context, node.value));
 }
 
-function interpret(arg, context = setReserved(_context.emptyContext)) {
+function interpret(arg, context = _context.emptyContext) {
+  if (_lodash.default.isEqual(context.reserved, {})) {
+    context = setReserved(context);
+  }
+
   switch (arg.type) {
     case 'statements':
       return interpretStatements(arg, context);

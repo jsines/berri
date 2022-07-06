@@ -53,7 +53,7 @@ const charTokenizers = [{
   value: "-"
 }, {
   type: "math",
-  value: "-"
+  value: "*"
 }, {
   type: "math",
   value: "/"

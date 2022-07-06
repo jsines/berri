@@ -1,0 +1,35 @@
+{
+  "type": "statements",
+  "value": [
+    {
+      "type": "statement",
+      "value": [
+        {
+          "type": "math",
+          "value": "+"
+        },
+        {
+          "type": "statement",
+          "value": [
+            {
+              "type": "math",
+              "value": "-"
+            },
+            {
+              "type": "number",
+              "value": "3"
+            },
+            {
+              "type": "number",
+              "value": "4"
+            }
+          ]
+        },
+        {
+          "type": "number",
+          "value": "2"
+        }
+      ]
+    }
+  ]
+}

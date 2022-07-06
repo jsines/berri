@@ -19,6 +19,7 @@ import {
     getResult
 } from './context.js';
 import { ASTNode } from './parser.js';
+import _ from 'lodash';
 
 function interpretDefinition(params: ASTNode[], context: Context): Context {
     if (params.length != 2) {
@@ -97,7 +98,10 @@ function interpretIdentifier(node: ASTNode, context: Context): Context {
     return setResult(context, getDefinition(context, node.value))
 }
 
-export default function interpret(arg: ASTNode, context: Context = setReserved(emptyContext)): any {
+export default function interpret(arg: ASTNode, context: Context = emptyContext): any {
+    if(_.isEqual(context.reserved, {})) {
+        context = setReserved(context);
+    }
     switch(arg.type) {
         case 'statements':
             return interpretStatements(arg, context);
