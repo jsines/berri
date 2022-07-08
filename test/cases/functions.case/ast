@@ -1,0 +1,175 @@
+{
+  "type": "statements",
+  "value": [
+    {
+      "type": "statement",
+      "value": [
+        {
+          "type": "reserved",
+          "value": "print"
+        },
+        {
+          "type": "statement",
+          "value": [
+            {
+              "type": "function",
+              "value": [
+                {
+                  "type": "array",
+                  "value": [
+                    {
+                      "type": "identifier",
+                      "value": "x"
+                    },
+                    {
+                      "type": "identifier",
+                      "value": "y"
+                    }
+                  ]
+                },
+                {
+                  "type": "statements",
+                  "value": [
+                    {
+                      "type": "statement",
+                      "value": [
+                        {
+                          "type": "math",
+                          "value": "+"
+                        },
+                        {
+                          "type": "identifier",
+                          "value": "x"
+                        },
+                        {
+                          "type": "identifier",
+                          "value": "y"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "number",
+              "value": "2"
+            },
+            {
+              "type": "number",
+              "value": "3"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "statement",
+      "value": [
+        {
+          "type": "reserved",
+          "value": "def"
+        },
+        {
+          "type": "identifier",
+          "value": "myFunc"
+        },
+        {
+          "type": "function",
+          "value": [
+            {
+              "type": "array",
+              "value": [
+                {
+                  "type": "identifier",
+                  "value": "x"
+                },
+                {
+                  "type": "identifier",
+                  "value": "y"
+                },
+                {
+                  "type": "identifier",
+                  "value": "z"
+                }
+              ]
+            },
+            {
+              "type": "statements",
+              "value": [
+                {
+                  "type": "statement",
+                  "value": [
+                    {
+                      "type": "reserved",
+                      "value": "def"
+                    },
+                    {
+                      "type": "identifier",
+                      "value": "subtotal"
+                    },
+                    {
+                      "type": "statement",
+                      "value": [
+                        {
+                          "type": "math",
+                          "value": "+"
+                        },
+                        {
+                          "type": "identifier",
+                          "value": "x"
+                        },
+                        {
+                          "type": "identifier",
+                          "value": "y"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "statement",
+                  "value": [
+                    {
+                      "type": "math",
+                      "value": "+"
+                    },
+                    {
+                      "type": "identifier",
+                      "value": "subtotal"
+                    },
+                    {
+                      "type": "identifier",
+                      "value": "z"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "statement",
+      "value": [
+        {
+          "type": "identifier",
+          "value": "myFunc"
+        },
+        {
+          "type": "number",
+          "value": "11"
+        },
+        {
+          "type": "number",
+          "value": "12"
+        },
+        {
+          "type": "number",
+          "value": "13"
+        }
+      ]
+    }
+  ]
+}

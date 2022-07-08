@@ -6,14 +6,52 @@
       "value": [
         {
           "type": "math",
-          "value": "+"
+          "value": "/"
         },
         {
           "type": "statement",
           "value": [
             {
               "type": "math",
-              "value": "-"
+              "value": "*"
+            },
+            {
+              "type": "statement",
+              "value": [
+                {
+                  "type": "math",
+                  "value": "-"
+                },
+                {
+                  "type": "number",
+                  "value": "3.2"
+                },
+                {
+                  "type": "number",
+                  "value": "4.051"
+                }
+              ]
+            },
+            {
+              "type": "number",
+              "value": "22.13"
+            }
+          ]
+        },
+        {
+          "type": "statement",
+          "value": [
+            {
+              "type": "math",
+              "value": "+"
+            },
+            {
+              "type": "number",
+              "value": "1"
+            },
+            {
+              "type": "number",
+              "value": "2"
             },
             {
               "type": "number",
@@ -22,12 +60,20 @@
             {
               "type": "number",
               "value": "4"
+            },
+            {
+              "type": "number",
+              "value": "5"
+            },
+            {
+              "type": "number",
+              "value": "6"
+            },
+            {
+              "type": "number",
+              "value": "7"
             }
           ]
-        },
-        {
-          "type": "number",
-          "value": "2"
         }
       ]
     }

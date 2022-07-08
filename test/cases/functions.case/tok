@@ -1,0 +1,206 @@
+[
+  {
+    "type": "parenOpen",
+    "value": "("
+  },
+  {
+    "type": "reserved",
+    "value": "print"
+  },
+  {
+    "type": "parenOpen",
+    "value": "("
+  },
+  {
+    "type": "atSign",
+    "value": "@"
+  },
+  {
+    "type": "bracketOpen",
+    "value": "["
+  },
+  {
+    "type": "identifier",
+    "value": "x"
+  },
+  {
+    "type": "identifier",
+    "value": "y"
+  },
+  {
+    "type": "bracketClose",
+    "value": "]"
+  },
+  {
+    "type": "parenOpen",
+    "value": "("
+  },
+  {
+    "type": "parenOpen",
+    "value": "("
+  },
+  {
+    "type": "math",
+    "value": "+"
+  },
+  {
+    "type": "identifier",
+    "value": "x"
+  },
+  {
+    "type": "identifier",
+    "value": "y"
+  },
+  {
+    "type": "parenClose",
+    "value": ")"
+  },
+  {
+    "type": "parenClose",
+    "value": ")"
+  },
+  {
+    "type": "number",
+    "value": "2"
+  },
+  {
+    "type": "number",
+    "value": "3"
+  },
+  {
+    "type": "parenClose",
+    "value": ")"
+  },
+  {
+    "type": "parenClose",
+    "value": ")"
+  },
+  {
+    "type": "parenOpen",
+    "value": "("
+  },
+  {
+    "type": "reserved",
+    "value": "def"
+  },
+  {
+    "type": "identifier",
+    "value": "myFunc"
+  },
+  {
+    "type": "atSign",
+    "value": "@"
+  },
+  {
+    "type": "bracketOpen",
+    "value": "["
+  },
+  {
+    "type": "identifier",
+    "value": "x"
+  },
+  {
+    "type": "identifier",
+    "value": "y"
+  },
+  {
+    "type": "identifier",
+    "value": "z"
+  },
+  {
+    "type": "bracketClose",
+    "value": "]"
+  },
+  {
+    "type": "parenOpen",
+    "value": "("
+  },
+  {
+    "type": "parenOpen",
+    "value": "("
+  },
+  {
+    "type": "reserved",
+    "value": "def"
+  },
+  {
+    "type": "identifier",
+    "value": "subtotal"
+  },
+  {
+    "type": "parenOpen",
+    "value": "("
+  },
+  {
+    "type": "math",
+    "value": "+"
+  },
+  {
+    "type": "identifier",
+    "value": "x"
+  },
+  {
+    "type": "identifier",
+    "value": "y"
+  },
+  {
+    "type": "parenClose",
+    "value": ")"
+  },
+  {
+    "type": "parenClose",
+    "value": ")"
+  },
+  {
+    "type": "parenOpen",
+    "value": "("
+  },
+  {
+    "type": "math",
+    "value": "+"
+  },
+  {
+    "type": "identifier",
+    "value": "subtotal"
+  },
+  {
+    "type": "identifier",
+    "value": "z"
+  },
+  {
+    "type": "parenClose",
+    "value": ")"
+  },
+  {
+    "type": "parenClose",
+    "value": ")"
+  },
+  {
+    "type": "parenClose",
+    "value": ")"
+  },
+  {
+    "type": "parenOpen",
+    "value": "("
+  },
+  {
+    "type": "identifier",
+    "value": "myFunc"
+  },
+  {
+    "type": "number",
+    "value": "11"
+  },
+  {
+    "type": "number",
+    "value": "12"
+  },
+  {
+    "type": "number",
+    "value": "13"
+  },
+  {
+    "type": "parenClose",
+    "value": ")"
+  }
+]

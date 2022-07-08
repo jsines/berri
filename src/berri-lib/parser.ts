@@ -29,11 +29,59 @@ function parseToken (tokens: Token[], p: number): ParserResult  {
         case 'math':
             return [1, {type: 'math', value: token.value}];
             break;
+        case 'atSign':
+            return parseFunction(tokens, p);
+            break;
+        case 'bracketOpen':
+            return parseArray(tokens, p);
+            break;
     }
     ERROR(`Parser: Unexpected token: ${PP(token)}`);
     return [0, {type: 'error', value: 'Something broke!'}];
 }
 
+function parseFunction(tokens: Token[], startIndex: number): ParserResult {
+    let [argumentConsumed, argumentNode] = parseArray(tokens, startIndex+1);
+    let [procedureConsumed, procedureNode] = parseStatements(tokens, startIndex+argumentConsumed+1);
+    return [argumentConsumed+procedureConsumed+1, {
+        type: 'function',
+        value: [
+            argumentNode,
+            procedureNode
+        ]
+    }]
+}
+
+function parseArray(tokens: Token[], startIndex: number): ParserResult {
+    let tokensConsumed = 1;
+    let value: ASTNode[] = [];
+    while (startIndex + tokensConsumed < tokens.length && tokens[startIndex + tokensConsumed].type != 'bracketClose') {
+        let [consumed, astNode] = parseToken(tokens, startIndex + tokensConsumed);
+        tokensConsumed += consumed;
+        if (astNode) {
+            value.push(astNode);
+        }
+    }
+    if (startIndex + tokensConsumed === tokens.length) {
+        ERROR(`Parser: Expected ']' Token ${startIndex + tokensConsumed}`);
+    }
+    return [tokensConsumed + 1, { type: 'array', value }]
+}
+export function parseStatements (tokens: Token[], startIndex: number): ParserResult {
+    let tokensConsumed = 1;
+    let value: ASTNode[] = [];
+    while (startIndex + tokensConsumed < tokens.length && tokens[startIndex + tokensConsumed].type != 'parenClose') {
+        let [consumed, astNode] = parseToken(tokens, startIndex + tokensConsumed);
+        tokensConsumed += consumed;
+        if (astNode) {
+            value.push(astNode);
+        }
+    }
+    if (startIndex + tokensConsumed === tokens.length) {
+        ERROR(`Parser: Expected ')' Token ${startIndex + tokensConsumed}`);
+    }
+    return [tokensConsumed+1, { type: 'statements', value }];
+}
 export function parseStatement (tokens: Token[], startIndex: number): ParserResult {
     let tokensConsumed = 1;
     let value: ASTNode[] = [];
@@ -45,21 +93,19 @@ export function parseStatement (tokens: Token[], startIndex: number): ParserResu
         }
     }
     if (startIndex+tokensConsumed === tokens.length) {
-        ERROR(`Parser: Expected ')'`);
+        ERROR(`Parser: Expected ')' Token ${startIndex + tokensConsumed}`);
     }
     return [tokensConsumed+1, { type: 'statement', value }];
 }
 
 export default function parse (tokens: Token[]): ASTNode {
     let p = 0;
-    let consumed; 
     const ast: ASTNode = {
         type: 'statements',
         value: []
     };
     while (p < tokens.length) {
-        let token: ASTNode;
-        [consumed, token] = parseToken(tokens, p);
+        let [consumed, token] = parseToken(tokens, p);
         p+=consumed;
         if (token) {
             ast.value.push(token);

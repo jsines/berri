@@ -1,0 +1,56 @@
+{
+  "type": "statements",
+  "value": [
+    {
+      "type": "statement",
+      "value": [
+        {
+          "type": "reserved",
+          "value": "def"
+        },
+        {
+          "type": "identifier",
+          "value": "testVar"
+        },
+        {
+          "type": "array",
+          "value": [
+            {
+              "type": "number",
+              "value": "1"
+            },
+            {
+              "type": "number",
+              "value": "2"
+            },
+            {
+              "type": "number",
+              "value": "3"
+            },
+            {
+              "type": "number",
+              "value": "4"
+            },
+            {
+              "type": "number",
+              "value": "5"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "statement",
+      "value": [
+        {
+          "type": "reserved",
+          "value": "print"
+        },
+        {
+          "type": "identifier",
+          "value": "testVar"
+        }
+      ]
+    }
+  ]
+}

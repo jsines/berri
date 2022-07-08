@@ -25,3 +25,9 @@ export const PRINT: Logger = generateLogger(chalk.magenta, '|🍇|');
 export const PP = (x: any) => {
     return JSON.stringify(x, null, 2)
 }
+const verboseFunction = (key, val) => {
+    if (typeof val === 'function' || val && val.constructor === RegExp) {
+        return String(val)
+    }
+    return val;
+}

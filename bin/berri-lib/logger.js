@@ -41,3 +41,11 @@ const PP = x => {
 };
 
 exports.PP = PP;
+
+const verboseFunction = (key, val) => {
+  if (typeof val === 'function' || val && val.constructor === RegExp) {
+    return String(val);
+  }
+
+  return val;
+};

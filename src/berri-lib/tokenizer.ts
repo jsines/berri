@@ -1,5 +1,5 @@
 import { isReserved } from './context.js';
-import { ERROR } from './logger.js'
+import { ERROR, WARN } from './logger.js'
 
 export interface Token {
     type: string,
@@ -20,8 +20,8 @@ const charTokenizers: Tokenizer[] = [
     {type: "parenClose", value: ")"},
     {type: "equal", value: "="},
     {type: "semi", value: ";"},
-    {type: "braketOpen", value: "["},
-    {type: "braketClose", value: "]"},
+    {type: "bracketOpen", value: "["},
+    {type: "bracketClose", value: "]"},
     {type: "braceOpen", value: "{"},
     {type: "braceClose", value: "}"},
     {type: "comma", value: ","},
@@ -31,30 +31,25 @@ const charTokenizers: Tokenizer[] = [
     {type: "math", value: "*"},
     {type: "math", value: "/"},
     {type: "math", value: ">"},
-    {type: "math", value: "<"}
+    {type: "math", value: "<"},
+    {type: "atSign", value: "@"}
 ].map(token => 
     ((input: string, current: number) => tokenizeCharacter(token.type, token.value, input, current))
 );
 function tokenizePattern (type: string, pattern: RegExp, input: string, current: number): TokenizerResult {
-    let char: string = input[current];
-    let consumed = 0;
-    if (pattern.test(char)) {
-        let value = '';
-        while (char && pattern.test(char)) {
-            value += char;
-            consumed++;
-            char = input[current + consumed];
-        }
+    const matching = input.slice(current).match(pattern);
+    if (matching) {
+        const value = matching[0];
         if (reservedKeywords.includes(value)) {
-            return [consumed, {type: 'reserved', value}]
+            return [value.length, {type: 'reserved', value}]
         }
-        return [consumed, {type, value}];
+        return [value.length, {type, value}];
     }
     return [0, null];
 }
 const patternTokenizers : Tokenizer[] = [
-    {type: "identifier", pattern: /[a-zA-Z_][a-zA-Z0-9_]*/},
-    {type: "number", pattern: /[0-9]+/},
+    {type: "identifier", pattern: /^[a-zA-Z_][a-zA-Z0-9_]*/},
+    {type: "number", pattern: /^[+-]?(\d*\.)?\d+/},
 ].map(token =>
     (input: string, current: number) => tokenizePattern(token.type, token.pattern, input, current)
 );
@@ -76,8 +71,8 @@ const tokenizeString = (input: string, current: number): TokenizerResult => {
 const skipWhiteSpace: Tokenizer = (input: string, current: number): TokenizerResult => (/\s/.test(input[current])) ? [1, null] : [0, null]
 
 const tokenizers: Tokenizer[] = [
-    ...charTokenizers,
     ...patternTokenizers,
+    ...charTokenizers,
     skipWhiteSpace,
     tokenizeString,
 ]

@@ -28,10 +28,10 @@ const charTokenizers = [{
   type: "semi",
   value: ";"
 }, {
-  type: "braketOpen",
+  type: "bracketOpen",
   value: "["
 }, {
-  type: "braketClose",
+  type: "bracketClose",
   value: "]"
 }, {
   type: "braceOpen",
@@ -63,29 +63,25 @@ const charTokenizers = [{
 }, {
   type: "math",
   value: "<"
+}, {
+  type: "atSign",
+  value: "@"
 }].map(token => (input, current) => tokenizeCharacter(token.type, token.value, input, current));
 
 function tokenizePattern(type, pattern, input, current) {
-  let char = input[current];
-  let consumed = 0;
+  const matching = input.slice(current).match(pattern);
 
-  if (pattern.test(char)) {
-    let value = '';
-
-    while (char && pattern.test(char)) {
-      value += char;
-      consumed++;
-      char = input[current + consumed];
-    }
+  if (matching) {
+    const value = matching[0];
 
     if (reservedKeywords.includes(value)) {
-      return [consumed, {
+      return [value.length, {
         type: 'reserved',
         value
       }];
     }
 
-    return [consumed, {
+    return [value.length, {
       type,
       value
     }];
@@ -96,10 +92,10 @@ function tokenizePattern(type, pattern, input, current) {
 
 const patternTokenizers = [{
   type: "identifier",
-  pattern: /[a-zA-Z_][a-zA-Z0-9_]*/
+  pattern: /^[a-zA-Z_][a-zA-Z0-9_]*/
 }, {
   type: "number",
-  pattern: /[0-9]+/
+  pattern: /^[+-]?(\d*\.)?\d+/
 }].map(token => (input, current) => tokenizePattern(token.type, token.pattern, input, current));
 
 const tokenizeString = (input, current) => {
@@ -125,7 +121,7 @@ const tokenizeString = (input, current) => {
 
 const skipWhiteSpace = (input, current) => /\s/.test(input[current]) ? [1, null] : [0, null];
 
-const tokenizers = [...charTokenizers, ...patternTokenizers, skipWhiteSpace, tokenizeString];
+const tokenizers = [...patternTokenizers, ...charTokenizers, skipWhiteSpace, tokenizeString];
 
 function tokenize(code) {
   let p = 0;
