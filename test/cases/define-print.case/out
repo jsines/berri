@@ -1,6 +1,9 @@
 {
   "result": 13,
-  "reserved": {},
+  "reserved": {
+    "true": true,
+    "false": false
+  },
   "memory": {
     "testVar": 13
   }

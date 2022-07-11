@@ -14,16 +14,13 @@ function tokenizeCharacter(type, value, input, current) {
   }] : [0, null];
 }
 
-const reservedKeywords = ['def', 'print'];
+const reservedKeywords = ['def', 'print', 'true', 'false'];
 const charTokenizers = [{
   type: "parenOpen",
   value: "("
 }, {
   type: "parenClose",
   value: ")"
-}, {
-  type: "equal",
-  value: "="
 }, {
   type: "semi",
   value: ";"
@@ -47,6 +44,9 @@ const charTokenizers = [{
   value: "."
 }, {
   type: "math",
+  value: "="
+}, {
+  type: "math",
   value: "+"
 }, {
   type: "math",
@@ -63,6 +63,21 @@ const charTokenizers = [{
 }, {
   type: "math",
   value: "<"
+}, {
+  type: "math",
+  value: "%"
+}, {
+  type: "math",
+  value: "&"
+}, {
+  type: "math",
+  value: "!"
+}, {
+  type: "math",
+  value: "^"
+}, {
+  type: "math",
+  value: "|"
 }, {
   type: "atSign",
   value: "@"

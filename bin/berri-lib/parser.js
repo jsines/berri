@@ -4,8 +4,8 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = parse;
+exports.parseBlock = parseBlock;
 exports.parseStatement = parseStatement;
-exports.parseStatements = parseStatements;
 
 var _logger = require("./logger.js");
 
@@ -15,21 +15,24 @@ function parseToken(tokens, p) {
   switch (token.type) {
     case 'parenOpen':
       return parseStatement(tokens, p);
-      break;
+
+    case 'bracketOpen':
+      return parseArray(tokens, p);
+
+    case 'braceOpen':
+      return parseBlock(tokens, p);
 
     case 'number':
       return [1, {
         type: 'number',
         value: token.value
       }];
-      break;
 
     case 'string':
       return [1, {
         type: 'string',
         value: token.value
       }];
-      break;
 
     case 'reserved':
       return [1, {
@@ -42,22 +45,15 @@ function parseToken(tokens, p) {
         type: 'identifier',
         value: token.value
       }];
-      break;
 
     case 'math':
       return [1, {
         type: 'math',
         value: token.value
       }];
-      break;
 
     case 'atSign':
       return parseFunction(tokens, p);
-      break;
-
-    case 'bracketOpen':
-      return parseArray(tokens, p);
-      break;
   }
 
   (0, _logger.ERROR)(`Parser: Unexpected token: ${(0, _logger.PP)(token)}`);
@@ -69,7 +65,7 @@ function parseToken(tokens, p) {
 
 function parseFunction(tokens, startIndex) {
   let [argumentConsumed, argumentNode] = parseArray(tokens, startIndex + 1);
-  let [procedureConsumed, procedureNode] = parseStatements(tokens, startIndex + argumentConsumed + 1);
+  let [procedureConsumed, procedureNode] = parseBlock(tokens, startIndex + argumentConsumed + 1);
   return [argumentConsumed + procedureConsumed + 1, {
     type: 'function',
     value: [argumentNode, procedureNode]
@@ -99,11 +95,11 @@ function parseArray(tokens, startIndex) {
   }];
 }
 
-function parseStatements(tokens, startIndex) {
+function parseBlock(tokens, startIndex) {
   let tokensConsumed = 1;
   let value = [];
 
-  while (startIndex + tokensConsumed < tokens.length && tokens[startIndex + tokensConsumed].type != 'parenClose') {
+  while (startIndex + tokensConsumed < tokens.length && tokens[startIndex + tokensConsumed].type != 'braceClose') {
     let [consumed, astNode] = parseToken(tokens, startIndex + tokensConsumed);
     tokensConsumed += consumed;
 
@@ -113,11 +109,11 @@ function parseStatements(tokens, startIndex) {
   }
 
   if (startIndex + tokensConsumed === tokens.length) {
-    (0, _logger.ERROR)(`Parser: Expected ')' Token ${startIndex + tokensConsumed}`);
+    (0, _logger.ERROR)(`Parser: Expected '}' Token ${startIndex + tokensConsumed}`);
   }
 
   return [tokensConsumed + 1, {
-    type: 'statements',
+    type: 'block',
     value
   }];
 }
@@ -148,7 +144,7 @@ function parseStatement(tokens, startIndex) {
 function parse(tokens) {
   let p = 0;
   const ast = {
-    type: 'statements',
+    type: 'block',
     value: []
   };
 
