@@ -14,7 +14,7 @@
   "scripts": {
     "watch": "yarn tsc -watch",
     "build": "yarn babel --extensions .ts ./src --out-dir bin",
-    "test": "jest --silent=false --verbose=false",
+    "test": "jest --silent=true --verbose=false",
     "berri-no-c": "ts-node ./bin/berri-cli/berri.js",
     "berri": "yarn build && yarn berri-no-c"
   },

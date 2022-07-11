@@ -86,5 +86,25 @@
   {
     "type": "parenClose",
     "value": ")"
+  },
+  {
+    "type": "parenOpen",
+    "value": "("
+  },
+  {
+    "type": "math",
+    "value": "%"
+  },
+  {
+    "type": "number",
+    "value": "7"
+  },
+  {
+    "type": "number",
+    "value": "5"
+  },
+  {
+    "type": "parenClose",
+    "value": ")"
   }
 ]

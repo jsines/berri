@@ -37,7 +37,68 @@ function interpretPrint(params, context) {
   return newContext;
 }
 
-function interpretStatements(node, context) {
+function interpretMath(comparisonFunction, shouldCoalesceResult = false) {
+  return function (params, context) {
+    const firstTermContext = interpret(params[0], context);
+    const mathArgumentNodes = params.slice(1);
+    return shouldCoalesceResult ? (0, _context.setResult)(context, mathArgumentNodes.reduce((prevContext, currentNode) => {
+      const innerContext = interpret(currentNode, prevContext);
+      const newResult = comparisonFunction((0, _context.getResult)(prevContext), (0, _context.getResult)(innerContext));
+      return (0, _context.setResult)(innerContext, newResult);
+    }, firstTermContext).result !== false) : mathArgumentNodes.reduce((prevContext, currentNode) => {
+      const innerContext = interpret(currentNode, prevContext);
+      const newResult = comparisonFunction((0, _context.getResult)(prevContext), (0, _context.getResult)(innerContext));
+      return (0, _context.setResult)(innerContext, newResult);
+    }, firstTermContext);
+  };
+}
+
+const interpretADD = interpretMath((a, b) => {
+  return a + b;
+});
+const interpretSUB = interpretMath((a, b) => {
+  return a - b;
+});
+const interpretMUL = interpretMath((a, b) => {
+  return a * b;
+});
+const interpretDIV = interpretMath((a, b) => {
+  return a / b;
+});
+
+const interpretNOT = (params, context) => {
+  if (params.length === 1) {
+    return (0, _context.setResult)(context, !(0, _context.getResult)(interpret(params[0], context)));
+  }
+
+  return (0, _context.setResult)(context, !(0, _context.getResult)(interpretOR(params, context))); // demorgans of !(!a & !b)
+};
+
+const interpretMOD = interpretMath((a, b) => {
+  return (a % b + b) % b;
+});
+const interpretAND = interpretMath((a, b) => {
+  return a && b;
+});
+const interpretOR = interpretMath((a, b) => {
+  return a || b;
+});
+const interpretXOR = interpretMath((a, b) => {
+  return a ^ b;
+});
+const interpretEQUAL = interpretMath((a, b) => {
+  return a === b;
+}); // https://stackoverflow.com/a/53833345
+
+const interpretLT = interpretMath((a, b) => {
+  return a !== false && a < b && b;
+}, true); // https://stackoverflow.com/a/53833345
+
+const interpretGT = interpretMath((a, b) => {
+  return a !== false && a > b && b;
+}, true);
+
+function interpretBlock(node, context) {
   return node.value.reduce((previousContext, currentStatement) => {
     return interpret(currentStatement, previousContext);
   }, context);
@@ -51,48 +112,58 @@ function interpretStatement(statement, context) {
     case 'reserved':
       const reservedContext = interpretReserved(operand, context);
       return (0, _context.getResult)(reservedContext)(params, reservedContext);
-      break;
 
     case 'identifier':
       const identifierContext = interpretIdentifier(operand, context);
       if (params.length > 0) return (0, _context.getResult)(identifierContext)(params, identifierContext);else return (0, _context.getResult)(identifierContext);
-      break;
 
     case 'math':
-      const mathContext = interpret(params[0], context);
-      const mathArgumentNodes = params.slice(1);
-      const operationsRecord = {
-        "+": (a, b) => {
-          return a + b;
-        },
-        "-": (a, b) => {
-          return a - b;
-        },
-        "*": (a, b) => {
-          return a * b;
-        },
-        "/": (a, b) => {
-          return a / b;
-        }
-      };
-      const newContext = mathArgumentNodes.reduce((prevContext, currentNode) => {
-        const innerContext = interpret(currentNode, prevContext);
-        const newResult = operationsRecord[operand.value]((0, _context.getResult)(prevContext), (0, _context.getResult)(innerContext));
-        return (0, _context.setResult)(innerContext, newResult);
-      }, mathContext);
-      return newContext;
-      break;
+      switch (operand.value) {
+        case '+':
+          return interpretADD(params, context);
+
+        case '-':
+          return interpretSUB(params, context);
+
+        case '*':
+          return interpretMUL(params, context);
+
+        case '/':
+          return interpretDIV(params, context);
+
+        case '!':
+          return interpretNOT(params, context);
+
+        case '%':
+          return interpretMOD(params, context);
+
+        case '&':
+          return interpretAND(params, context);
+
+        case '|':
+          return interpretOR(params, context);
+
+        case '^':
+          return interpretXOR(params, context);
+
+        case '=':
+          return interpretEQUAL(params, context);
+
+        case '<':
+          return interpretLT(params, context);
+
+        case '>':
+          return interpretGT(params, context);
+      }
 
     case 'statement':
       // statement as operand must evaluate to function
       const statementContext = interpretStatement(operand, context);
       return (0, _context.getResult)(statementContext)(params, statementContext);
-      break;
 
     case 'function':
       const functionContext = interpretFunction(operand, context);
       return (0, _context.getResult)(functionContext)(params, functionContext);
-      break;
   }
 
   (0, _logger.ERROR)(`Interpreter: Failed to interpret statement ${(0, _logger.PP)(statement)} in context ${(0, _logger.PP)(context)}`);
@@ -110,7 +181,7 @@ function interpretFunction(node, context) {
     node.value[0].value.forEach((astNode, i) => {
       localContext = (0, _context.addDefinition)(localContext, astNode.value, (0, _context.getResult)(interpret(functionParameters[i])));
     });
-    return (0, _context.setResult)(functionContext, (0, _context.getResult)(interpretStatements(node.value[1], localContext)));
+    return (0, _context.setResult)(functionContext, (0, _context.getResult)(interpretBlock(node.value[1], localContext)));
   };
 
   return (0, _context.setResult)(context, evalFunction);
@@ -141,8 +212,8 @@ function interpret(arg, context = _context.emptyContext) {
   }
 
   switch (arg.type) {
-    case 'statements':
-      return interpretStatements(arg, context);
+    case 'block':
+      return interpretBlock(arg, context);
       break;
 
     case 'statement':
@@ -183,5 +254,7 @@ function interpret(arg, context = _context.emptyContext) {
 function setReserved(context) {
   context = (0, _context.addReserved)(context, 'def', interpretDefinition);
   context = (0, _context.addReserved)(context, 'print', interpretPrint);
+  context = (0, _context.addReserved)(context, 'true', true);
+  context = (0, _context.addReserved)(context, 'false', false);
   return context;
 }

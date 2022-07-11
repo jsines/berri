@@ -1,5 +1,8 @@
 {
-  "result": -0.6725939285714285,
-  "reserved": {},
+  "result": 2,
+  "reserved": {
+    "true": true,
+    "false": false
+  },
   "memory": {}
 }

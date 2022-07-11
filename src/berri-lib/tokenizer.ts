@@ -13,12 +13,13 @@ function tokenizeCharacter (type: string, value: string, input:string, current:n
 }
 const reservedKeywords = [
     'def',
-    'print'
+    'print',
+    'true',
+    'false'
 ]
 const charTokenizers: Tokenizer[] = [
     {type: "parenOpen", value: "("},
     {type: "parenClose", value: ")"},
-    {type: "equal", value: "="},
     {type: "semi", value: ";"},
     {type: "bracketOpen", value: "["},
     {type: "bracketClose", value: "]"},
@@ -26,12 +27,18 @@ const charTokenizers: Tokenizer[] = [
     {type: "braceClose", value: "}"},
     {type: "comma", value: ","},
     {type: "dot", value: "."},
+    {type: "math", value: "="},
     {type: "math", value: "+"},
     {type: "math", value: "-"},
     {type: "math", value: "*"},
     {type: "math", value: "/"},
     {type: "math", value: ">"},
     {type: "math", value: "<"},
+    {type: "math", value: "%"},
+    {type: "math", value: "&"},
+    {type: "math", value: "!"},
+    {type: "math", value: "^"},
+    {type: "math", value: "|"},
     {type: "atSign", value: "@"}
 ].map(token => 
     ((input: string, current: number) => tokenizeCharacter(token.type, token.value, input, current))

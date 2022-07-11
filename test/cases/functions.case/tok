@@ -32,8 +32,8 @@
     "value": "]"
   },
   {
-    "type": "parenOpen",
-    "value": "("
+    "type": "braceOpen",
+    "value": "{"
   },
   {
     "type": "parenOpen",
@@ -56,8 +56,8 @@
     "value": ")"
   },
   {
-    "type": "parenClose",
-    "value": ")"
+    "type": "braceClose",
+    "value": "}"
   },
   {
     "type": "number",
@@ -112,8 +112,8 @@
     "value": "]"
   },
   {
-    "type": "parenOpen",
-    "value": "("
+    "type": "braceOpen",
+    "value": "{"
   },
   {
     "type": "parenOpen",
@@ -172,8 +172,8 @@
     "value": ")"
   },
   {
-    "type": "parenClose",
-    "value": ")"
+    "type": "braceClose",
+    "value": "}"
   },
   {
     "type": "parenClose",

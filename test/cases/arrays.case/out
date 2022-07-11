@@ -6,7 +6,10 @@
     4,
     5
   ],
-  "reserved": {},
+  "reserved": {
+    "true": true,
+    "false": false
+  },
   "memory": {
     "testVar": [
       1,

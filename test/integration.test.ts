@@ -32,13 +32,10 @@ describe('integration', () => {
       JSON.parse(fs.readFileSync(`${filePath}/out`, 'utf8'))
     ]
   }).forEach(([name, raw, tok, ast, out]) => {
-    
-    if(name !== './test/cases/test.case')
-      return;
     it(name, () => {
       expect(tokenize(raw)).toStrictEqual(tok);
       expect(parse(tok)).toStrictEqual(ast);
-      //expect(interpret(ast)).toBe(out)
+      //expect(interpret(ast)).toBe(out)  
       expect(contextEquals(interpret(ast), out)).toBe(true);
     })
   });
