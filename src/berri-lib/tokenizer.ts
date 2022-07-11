@@ -15,7 +15,8 @@ const reservedKeywords = [
     'def',
     'print',
     'true',
-    'false'
+    'false',
+    'if'
 ]
 const charTokenizers: Tokenizer[] = [
     {type: "parenOpen", value: "("},

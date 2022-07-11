@@ -37,6 +37,22 @@ function interpretPrint(params, context) {
   return newContext;
 }
 
+function interpretConditional(params, context) {
+  for (let i = 0; i + 1 < params.length; i += 2) {
+    const conditionalContext = interpret(params[i], context);
+
+    if (conditionalContext?.result) {
+      return interpret(params[i + 1], conditionalContext);
+    }
+  }
+
+  const hasElse = params.length % 2;
+
+  if (hasElse) {
+    return interpret(params[params.length - 1], context);
+  }
+}
+
 function interpretMath(comparisonFunction, shouldCoalesceResult = false) {
   return function (params, context) {
     const firstTermContext = interpret(params[0], context);
@@ -209,6 +225,7 @@ function interpretArray(node, context) {
 function interpret(arg, context = _context.emptyContext) {
   if (_lodash.default.isEqual(context.reserved, {})) {
     context = setReserved(context);
+    (0, _logger.WARN)(arg);
   }
 
   switch (arg.type) {
@@ -252,9 +269,10 @@ function interpret(arg, context = _context.emptyContext) {
 }
 
 function setReserved(context) {
-  context = (0, _context.addReserved)(context, 'def', interpretDefinition);
-  context = (0, _context.addReserved)(context, 'print', interpretPrint);
-  context = (0, _context.addReserved)(context, 'true', true);
-  context = (0, _context.addReserved)(context, 'false', false);
-  return context;
+  let newContext = (0, _context.addReserved)(context, 'def', interpretDefinition);
+  newContext = (0, _context.addReserved)(newContext, 'print', interpretPrint);
+  newContext = (0, _context.addReserved)(newContext, 'true', true);
+  newContext = (0, _context.addReserved)(newContext, 'false', false);
+  newContext = (0, _context.addReserved)(newContext, 'if', interpretConditional);
+  return newContext;
 }
