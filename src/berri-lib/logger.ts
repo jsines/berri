@@ -23,7 +23,7 @@ export const SUCCESS: Logger = generateLogger(chalk.green, '|🍏|');
 export const LOG: Logger = generateLogger(chalk.blue, '|🫐|');
 export const PRINT: Logger = generateLogger(chalk.magenta, '|🍇|');
 export const PP = (x: any) => {
-    return JSON.stringify(x, null, 2)
+    return JSON.stringify(x, verboseFunction, 2)
 }
 const verboseFunction = (key, val) => {
     if (typeof val === 'function' || val && val.constructor === RegExp) {

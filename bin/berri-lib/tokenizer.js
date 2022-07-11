@@ -14,7 +14,7 @@ function tokenizeCharacter(type, value, input, current) {
   }] : [0, null];
 }
 
-const reservedKeywords = ['def', 'print', 'true', 'false'];
+const reservedKeywords = ['def', 'print', 'true', 'false', 'if'];
 const charTokenizers = [{
   type: "parenOpen",
   value: "("

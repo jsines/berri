@@ -43,6 +43,18 @@ function interpretPrint(params: ASTNode[], context: Context): Context {
     PRINT(getResult(newContext));
     return newContext;
 }
+function interpretConditional(params: ASTNode[], context: Context): any {
+    for (let i = 0; i+1 < params.length; i+=2) {
+        const conditionalContext = interpret(params[i], context);
+        if (conditionalContext?.result) {
+            return interpret(params[i+1], conditionalContext);
+        } 
+    }
+    const hasElse = params.length % 2;
+    if (hasElse) {
+        return interpret(params[params.length-1], context)
+    }    
+}
 function interpretMath (comparisonFunction: (a: any, b: any) => any, shouldCoalesceResult: boolean = false ) {
     return function(params: ASTNode[], context: Context): Context {
         const firstTermContext = interpret(params[0], context);
@@ -184,6 +196,7 @@ function interpretArray(node: ASTNode, context: Context): Context {
 export default function interpret(arg: ASTNode, context: Context = emptyContext): any {
     if(_.isEqual(context.reserved, {})) {
         context = setReserved(context);
+        WARN(arg)
     }
     switch(arg.type) {
         case 'block':
@@ -217,9 +230,10 @@ export default function interpret(arg: ASTNode, context: Context = emptyContext)
 }
 
 function setReserved (context: Context): Context {
-    context = addReserved(context, 'def', interpretDefinition);
-    context = addReserved(context, 'print', interpretPrint);
-    context = addReserved(context, 'true', true);
-    context = addReserved(context, 'false', false);
-    return context;
+    let newContext = addReserved(context, 'def', interpretDefinition);
+    newContext = addReserved(newContext, 'print', interpretPrint);
+    newContext = addReserved(newContext, 'true', true);
+    newContext = addReserved(newContext, 'false', false);
+    newContext = addReserved(newContext, 'if', interpretConditional);
+    return newContext;
 }

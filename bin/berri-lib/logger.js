@@ -37,7 +37,7 @@ const PRINT = generateLogger(_chalk.default.magenta, '|🍇|');
 exports.PRINT = PRINT;
 
 const PP = x => {
-  return JSON.stringify(x, null, 2);
+  return JSON.stringify(x, verboseFunction, 2);
 };
 
 exports.PP = PP;
