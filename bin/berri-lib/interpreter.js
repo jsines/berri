@@ -225,7 +225,6 @@ function interpretArray(node, context) {
 function interpret(arg, context = _context.emptyContext) {
   if (_lodash.default.isEqual(context.reserved, {})) {
     context = setReserved(context);
-    (0, _logger.WARN)(arg);
   }
 
   switch (arg.type) {

@@ -196,7 +196,6 @@ function interpretArray(node: ASTNode, context: Context): Context {
 export default function interpret(arg: ASTNode, context: Context = emptyContext): any {
     if(_.isEqual(context.reserved, {})) {
         context = setReserved(context);
-        WARN(arg)
     }
     switch(arg.type) {
         case 'block':
