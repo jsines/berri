@@ -25,12 +25,28 @@ Variables are dynamically typed (for now?).
 `testVar`
 >`8`
 
-Lambda functions can be declared and assigned to a variable
+Conditionals
 
 ```
-(def myFunction @([x y z]
+  (if
+    (= var 5) {
+      (+ var 1)
+    }
+    (= var 6) {
+      (- var 1)
+    }
+    {
+      (var)
+    }
+  )
+```
+
+Lambda functions can be declared and assigned to a variable. Lambda functions are of the form `@[Array of arguments]{Block of statements}`
+
+```
+(def myFunction @[x y z]{
   (print (+ x y z))
-))
+})
 (print (myFunction 1 2 3))
 ```
 >`6`

@@ -6,10 +6,6 @@
 
 # Directory Structure
 
-`bin/`
-
-Contains output of typescript compilation.
-
 `docs/`
 
 Contains this documentation.

@@ -7,10 +7,10 @@
 # Directory Structure
 
 ```sh
-  berri
+  yarn berri
 ```
 
-Starts berri in REPL mode
+Starts berri in REPL mode. Shorthand for `yarn build && yarn berri-no-c`
 
 ```sh
   yarn berri [filename]
@@ -31,10 +31,10 @@ Creates a new case file under `/test/cases/`. All cases are checked for accuracy
 Compiles TypeScript in `src/`to JavaScript in `bin/`
 
 ```sh
-  yarn berri-c
+  yarn berri-no-c
 ```
 
-Shorthand for `yarn build && yarn berri`
+Runs berri without recompilation
 
 ```sh
   yarn test
