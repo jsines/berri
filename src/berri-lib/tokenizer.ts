@@ -16,7 +16,11 @@ const reservedKeywords = [
     'print',
     'true',
     'false',
-    'if'
+    'if',
+    'while',
+    'map',
+    'reduce',
+    'sum'
 ]
 const charTokenizers: Tokenizer[] = [
     {type: "parenOpen", value: "("},

@@ -37,8 +37,6 @@ describe('context', () => {
   test('addDefinition', () => {
     const resultantContext = addDefinition(emptyContext, 'testVar', 13);
     expect(resultantContext.memory['testVar']).toBe(13);
-    const throwsError = () => addDefinition(testContext, 'def', 13);
-    expect(throwsError).toThrow();
 
   })
   test('isDefined', () => {

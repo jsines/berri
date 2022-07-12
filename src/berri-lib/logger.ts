@@ -17,7 +17,7 @@ function generateLogger(colorFunction: any, prefix: string, shouldThrow: boolean
         }
     }
 }
-export const ERROR: Logger = generateLogger(chalk.red, '|🍓|', true);
+export const ERROR: Logger = generateLogger(chalk.red, '|🍓|');
 export const WARN: Logger = generateLogger(chalk.yellow, '|🍋|');
 export const SUCCESS: Logger = generateLogger(chalk.green, '|🍏|');
 export const LOG: Logger = generateLogger(chalk.blue, '|🫐|');

@@ -1,0 +1,158 @@
+[
+  {
+    "type": "parenOpen",
+    "value": "("
+  },
+  {
+    "type": "math",
+    "value": "="
+  },
+  {
+    "type": "parenOpen",
+    "value": "("
+  },
+  {
+    "type": "reserved",
+    "value": "reduce"
+  },
+  {
+    "type": "bracketOpen",
+    "value": "["
+  },
+  {
+    "type": "number",
+    "value": "1"
+  },
+  {
+    "type": "number",
+    "value": "2"
+  },
+  {
+    "type": "number",
+    "value": "3"
+  },
+  {
+    "type": "number",
+    "value": "4"
+  },
+  {
+    "type": "number",
+    "value": "5"
+  },
+  {
+    "type": "number",
+    "value": "6"
+  },
+  {
+    "type": "bracketClose",
+    "value": "]"
+  },
+  {
+    "type": "atSign",
+    "value": "@"
+  },
+  {
+    "type": "bracketOpen",
+    "value": "["
+  },
+  {
+    "type": "identifier",
+    "value": "x"
+  },
+  {
+    "type": "identifier",
+    "value": "y"
+  },
+  {
+    "type": "bracketClose",
+    "value": "]"
+  },
+  {
+    "type": "braceOpen",
+    "value": "{"
+  },
+  {
+    "type": "parenOpen",
+    "value": "("
+  },
+  {
+    "type": "math",
+    "value": "+"
+  },
+  {
+    "type": "identifier",
+    "value": "x"
+  },
+  {
+    "type": "identifier",
+    "value": "y"
+  },
+  {
+    "type": "parenClose",
+    "value": ")"
+  },
+  {
+    "type": "braceClose",
+    "value": "}"
+  },
+  {
+    "type": "number",
+    "value": "5"
+  },
+  {
+    "type": "parenClose",
+    "value": ")"
+  },
+  {
+    "type": "parenOpen",
+    "value": "("
+  },
+  {
+    "type": "reserved",
+    "value": "sum"
+  },
+  {
+    "type": "bracketOpen",
+    "value": "["
+  },
+  {
+    "type": "number",
+    "value": "1"
+  },
+  {
+    "type": "number",
+    "value": "2"
+  },
+  {
+    "type": "number",
+    "value": "3"
+  },
+  {
+    "type": "number",
+    "value": "4"
+  },
+  {
+    "type": "number",
+    "value": "5"
+  },
+  {
+    "type": "number",
+    "value": "6"
+  },
+  {
+    "type": "number",
+    "value": "5"
+  },
+  {
+    "type": "bracketClose",
+    "value": "]"
+  },
+  {
+    "type": "parenClose",
+    "value": ")"
+  },
+  {
+    "type": "parenClose",
+    "value": ")"
+  }
+]

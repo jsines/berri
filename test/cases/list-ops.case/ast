@@ -1,0 +1,138 @@
+{
+  "type": "block",
+  "value": [
+    {
+      "type": "statement",
+      "value": [
+        {
+          "type": "math",
+          "value": "="
+        },
+        {
+          "type": "statement",
+          "value": [
+            {
+              "type": "reserved",
+              "value": "reduce"
+            },
+            {
+              "type": "array",
+              "value": [
+                {
+                  "type": "number",
+                  "value": "1"
+                },
+                {
+                  "type": "number",
+                  "value": "2"
+                },
+                {
+                  "type": "number",
+                  "value": "3"
+                },
+                {
+                  "type": "number",
+                  "value": "4"
+                },
+                {
+                  "type": "number",
+                  "value": "5"
+                },
+                {
+                  "type": "number",
+                  "value": "6"
+                }
+              ]
+            },
+            {
+              "type": "function",
+              "value": [
+                {
+                  "type": "array",
+                  "value": [
+                    {
+                      "type": "identifier",
+                      "value": "x"
+                    },
+                    {
+                      "type": "identifier",
+                      "value": "y"
+                    }
+                  ]
+                },
+                {
+                  "type": "block",
+                  "value": [
+                    {
+                      "type": "statement",
+                      "value": [
+                        {
+                          "type": "math",
+                          "value": "+"
+                        },
+                        {
+                          "type": "identifier",
+                          "value": "x"
+                        },
+                        {
+                          "type": "identifier",
+                          "value": "y"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "number",
+              "value": "5"
+            }
+          ]
+        },
+        {
+          "type": "statement",
+          "value": [
+            {
+              "type": "reserved",
+              "value": "sum"
+            },
+            {
+              "type": "array",
+              "value": [
+                {
+                  "type": "number",
+                  "value": "1"
+                },
+                {
+                  "type": "number",
+                  "value": "2"
+                },
+                {
+                  "type": "number",
+                  "value": "3"
+                },
+                {
+                  "type": "number",
+                  "value": "4"
+                },
+                {
+                  "type": "number",
+                  "value": "5"
+                },
+                {
+                  "type": "number",
+                  "value": "6"
+                },
+                {
+                  "type": "number",
+                  "value": "5"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

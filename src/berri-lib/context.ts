@@ -23,11 +23,12 @@ export function addReserved(context: Context, identifier: string, value: any): C
   return newContext;
 }
 export function isReserved(context: Context, identifier: string): boolean {
-  return context.reserved.hasOwnProperty(identifier);
+  return !!context?.reserved?.hasOwnProperty(identifier);
 }
 export function getReserved(context: Context, identifier: string): any {
   if (!isReserved(context, identifier)) {
-    ERROR(`Failed to get definition of '${identifier}' in given context: ${context}`);
+    ERROR(`Context: Failed to get definition of '${identifier}' in given context: ${context}`);
+    return context;
   }
   return context.reserved[identifier];
 }
@@ -43,7 +44,7 @@ export function isDefined(context: Context, identifier: string): boolean {
   return context.memory.hasOwnProperty(identifier);
 }
 export function getDefinition(context: Context, identifier: string): any {
-  return context.memory[identifier];
+  return context?.memory[identifier];
 }
 export function setResult(context: Context, value: any): Context {
   const newContext: Context = Object.assign({}, context);

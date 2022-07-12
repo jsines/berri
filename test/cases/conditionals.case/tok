@@ -1,0 +1,150 @@
+[
+  {
+    "type": "parenOpen",
+    "value": "("
+  },
+  {
+    "type": "reserved",
+    "value": "print"
+  },
+  {
+    "type": "parenOpen",
+    "value": "("
+  },
+  {
+    "type": "reserved",
+    "value": "if"
+  },
+  {
+    "type": "parenOpen",
+    "value": "("
+  },
+  {
+    "type": "math",
+    "value": "="
+  },
+  {
+    "type": "number",
+    "value": "5"
+  },
+  {
+    "type": "number",
+    "value": "4"
+  },
+  {
+    "type": "parenClose",
+    "value": ")"
+  },
+  {
+    "type": "braceOpen",
+    "value": "{"
+  },
+  {
+    "type": "parenOpen",
+    "value": "("
+  },
+  {
+    "type": "math",
+    "value": "+"
+  },
+  {
+    "type": "number",
+    "value": "5"
+  },
+  {
+    "type": "number",
+    "value": "5"
+  },
+  {
+    "type": "parenClose",
+    "value": ")"
+  },
+  {
+    "type": "braceClose",
+    "value": "}"
+  },
+  {
+    "type": "parenOpen",
+    "value": "("
+  },
+  {
+    "type": "math",
+    "value": "="
+  },
+  {
+    "type": "number",
+    "value": "5"
+  },
+  {
+    "type": "number",
+    "value": "6"
+  },
+  {
+    "type": "parenClose",
+    "value": ")"
+  },
+  {
+    "type": "braceOpen",
+    "value": "{"
+  },
+  {
+    "type": "parenOpen",
+    "value": "("
+  },
+  {
+    "type": "math",
+    "value": "-"
+  },
+  {
+    "type": "number",
+    "value": "5"
+  },
+  {
+    "type": "number",
+    "value": "2"
+  },
+  {
+    "type": "parenClose",
+    "value": ")"
+  },
+  {
+    "type": "braceClose",
+    "value": "}"
+  },
+  {
+    "type": "braceOpen",
+    "value": "{"
+  },
+  {
+    "type": "parenOpen",
+    "value": "("
+  },
+  {
+    "type": "math",
+    "value": "+"
+  },
+  {
+    "type": "number",
+    "value": "10"
+  },
+  {
+    "type": "number",
+    "value": "10"
+  },
+  {
+    "type": "parenClose",
+    "value": ")"
+  },
+  {
+    "type": "braceClose",
+    "value": "}"
+  },
+  {
+    "type": "parenClose",
+    "value": ")"
+  },
+  {
+    "type": "parenClose",
+    "value": ")"
+  }
+]

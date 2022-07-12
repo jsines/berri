@@ -53,7 +53,35 @@ function interpretConditional(params: ASTNode[], context: Context): any {
     const hasElse = params.length % 2;
     if (hasElse) {
         return interpret(params[params.length-1], context)
-    }    
+    }
+    return context  
+}
+
+function interpretWhile(params: ASTNode[], context: Context): any {
+    let curContext = context;
+    while (getResult(interpret(params[0], curContext))) {
+        curContext = interpretBlock(params[1], curContext);
+    }
+    return curContext;
+}
+
+function interpretMap(params: ASTNode[], context: Context): Context {
+    const callback = getResult(interpretFunction(params[1], context));
+    
+    return setResult(params[0].value.map((x) => {
+        return getResult(callback([x], context));
+    }), context);
+}
+
+function interpretReduce(params: ASTNode[], context: Context): Context {
+    const callback = getResult(interpretFunction(params[1], context));
+    return interpret(params[0].value.reduce((acc, cur) => {
+        return {type: params[2].type, value: getResult(callback([acc, cur], context))}
+    }, params[2]), context)
+}
+
+function interpretSum(params: ASTNode[], context: Context): Context {
+    return interpretADD(params[0].value, context)
 }
 function interpretMath (comparisonFunction: (a: any, b: any) => any, shouldCoalesceResult: boolean = false ) {
     return function(params: ASTNode[], context: Context): Context {
@@ -179,8 +207,10 @@ function interpretReserved(node: ASTNode, context: Context): Context {
     return setResult(context, getReserved(context, node.value));
 }
 function interpretIdentifier(node: ASTNode, context: Context): Context {
-    if (!isDefined(context, node.value))
+    if (!isDefined(context, node.value)){
         ERROR(`Interpreter: Failed to get interpret identifier ${node.value}`)
+        return context;
+    }
     return setResult(context, getDefinition(context, node.value))
 }
 function interpretArray(node: ASTNode, context: Context): Context {
@@ -193,36 +223,28 @@ function interpretArray(node: ASTNode, context: Context): Context {
     return setResult(context, res);
 }
 
-export default function interpret(arg: ASTNode, context: Context = emptyContext): any {
+export default function interpret(arg: ASTNode, context: Context = emptyContext): Context {
     if(_.isEqual(context.reserved, {})) {
         context = setReserved(context);
     }
     switch(arg.type) {
         case 'block':
             return interpretBlock(arg, context);
-            break;
         case 'statement':
             return interpretStatement(arg, context);
-            break;
         case 'reserved':
             return interpretReserved(arg, context);
-            break;
         case 'identifier':
             return interpretIdentifier(arg, context);
-            break;
         case 'number':
             return setResult(context, Number(arg.value));
-            break;
         case 'string':
             return setResult(context, arg.value);
-            break;
         case 'function':
             return interpretFunction(arg, context);
-            break;
         case 'array':
             return interpretArray(arg, context);
         default:
-            break;
     }
     ERROR(`Interpreter: Failed to interpret ${PP(arg)}`);
     return emptyContext;
@@ -234,5 +256,9 @@ function setReserved (context: Context): Context {
     newContext = addReserved(newContext, 'true', true);
     newContext = addReserved(newContext, 'false', false);
     newContext = addReserved(newContext, 'if', interpretConditional);
+    newContext = addReserved(newContext, 'while', interpretWhile);
+    newContext = addReserved(newContext, 'map', interpretMap);
+    newContext = addReserved(newContext, 'reduce', interpretReduce);
+    newContext = addReserved(newContext, 'sum', interpretSum);
     return newContext;
 }
