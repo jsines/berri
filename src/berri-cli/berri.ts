@@ -1,6 +1,6 @@
 import yargs from 'yargs'
 import fs from 'fs';
-import * as readline from 'node:readline';
+import repl from 'repl';
 import chalk from 'chalk';
 import tokenize, { Token } from '../berri-lib/tokenizer.js';
 import parse, { ASTNode } from '../berri-lib/parser.js';
@@ -13,6 +13,7 @@ import {
     PRINT
 } from '../berri-lib/logger.js';
 import { Context, emptyContext } from '../berri-lib/context.js'
+import { Config } from './config-type.js'
 
 type Debug = [
     tokens: Token[],
@@ -45,14 +46,20 @@ export function saveTestCase (fileName, code, tokens, ast, out) {
  * In debug, returns resultant (Debug). 
  * When not, returns resultant (Context)
  */
-export default function berri (code: string, context: Context = emptyContext, debug: boolean=false): any {
+export default function berri (code: string, context: Context = emptyContext, config: Config): any {
     const tokens: Token[] = tokenize(code);
     //LOG(tokens)
     const ast: ASTNode = parse(tokens);
     //LOG(ast)
     const out: Context = interpret(ast, context);
     //LOG(out)
-    if (debug) {
+    switch(config.berriOutput) {
+        case 'all':
+            return [tokens, ast, out];
+        case 'context':
+            return out;
+    }
+    if (config.berriOutput === 'debug') {
         return [tokens, ast, out];
     } else {
         return out;
@@ -65,7 +72,9 @@ if (args._.length > 1) {
 } else if (args._.length === 1) {
     const fileName: string = `${readDir}/${args._[0]}`;
     const code: string = fs.readFileSync(fileName, 'utf8');
-    const [tokens, ast, out] = berri(code, emptyContext, true);
+
+    const config = JSON.parse(fs.readFileSync('./ber-config.json', 'utf-8'));
+    const [tokens, ast, out] = berri(code, emptyContext, config);
     if (typeof(args._['save']) !== undefined) {
         try {
             saveTestCase(args._[0], code, tokens, ast, out);
@@ -74,11 +83,21 @@ if (args._.length > 1) {
         }
     }
 } else {
+    const config = JSON.parse(fs.readFileSync('./ber-repl-config.json', 'utf-8'));
+    const replOptions = {
+        useColors: true
+    }
+    const instance = repl.start();
+    instance.on('exit', ()=> {
+        PRINT('quitting...');
+        process.exit();
+    })
+    instance.on(')
     let currentContext = Object.assign({}, emptyContext);
     var stdin = process.openStdin();
     PRINT('berri repl v1.0.0')
     stdin.addListener("data", (d) => {
-        currentContext = berri(d.toString().trim(), currentContext);
+        currentContext = berri(d.toString().trim(), currentContext, config);
         PRINT(currentContext.result);
     });
 }   
